@@ -70,6 +70,18 @@ var AT_BREAKER_EXPECTATIONS = [
   ["@foo{{{}{}}{}}",
    [["foo", null, "{{}{}}{}"]]],
 
+  // - escaped strings
+  ['@"foo"',
+   "foo"],
+  // merge with adjacent string bits
+  ['@"foo" @"bar"',
+   "foo bar"],
+  ['foo@"@"bar.com',
+   "foo@bar.com"],
+  // unaffected by other nesting logic.
+  ['@foo{@"{" what what}',
+   [["foo", null, "{ what what"]]],
+  
   // - alternate syntax
   // things that would normally match but for our guards
   ["@foo|<<{}>>|",
@@ -90,6 +102,11 @@ var AT_BREAKER_EXPECTATIONS = [
    [[null, null, [
        "foo ",
        [null, "bar", null]]]]],
+  ["@foo{bar@|baz|bog}",
+   [["foo", null, [
+       "bar",
+       [null, "baz", null],
+       "bog"]]]],
 
   // -- comments
 
