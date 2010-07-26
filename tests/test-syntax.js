@@ -70,6 +70,26 @@ var AT_BREAKER_EXPECTATIONS = [
   ["@foo{{{}{}}{}}",
    [["foo", null, "{{}{}}{}"]]],
 
+  // - alternate syntax
+  // things that would normally match but for our guards
+  ["@foo|<<{}>>|",
+   [["foo", null, ""]]],
+  ["@foo|<<{@bar @[baz]}>>|",
+   [["foo", null, "@bar @[baz]"]]],
+  // escaped things that do match
+  ["@foo|<<{|<<@bar |<<@[baz]}>>|",
+   [["foo", null, [
+       ["bar", null, null],
+       " ",
+       [null, "baz", null]]]]],
+
+  // -- expression escape
+  ["@|foo|",
+   [[null, "foo", null]]],
+  ["@{foo @|bar|}",
+   [[null, null, [
+       "foo ",
+       [null, "bar", null]]]]],
 
   // -- comments
 
