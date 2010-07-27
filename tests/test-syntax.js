@@ -15,6 +15,8 @@ exports.altSyntaxMirror = function(test) {
   }
 };
 
+// These tests assumed @;{ ;} is required, but that's not really the case.
+//  Luckily it's not a big deal.
 var NESTED_COMMENT_EXPECTATIONS = [
   ["@;{;}", 0, undefined],
   ["@;{foo;}", 0, undefined],
@@ -34,7 +36,7 @@ exports.nestedCommentWalker = function(test) {
 };
 
 var AT_BREAKER_EXPECTATIONS = [
-  // absolute basics
+  // -- absolute basics
   ["foo",
    "foo"],
   ["@foo",
@@ -54,7 +56,7 @@ var AT_BREAKER_EXPECTATIONS = [
   ["@foo[]{}",
    [["foo", "", ""]]],
 
-  // basic sequence support
+  // -- basic sequence support
   ["foo @bar baz",
    ["foo ", ["bar", null, null], " baz"]],
   ["@foo bar @baz",
@@ -81,8 +83,11 @@ var AT_BREAKER_EXPECTATIONS = [
   // unaffected by other nesting logic.
   ['@foo{@"{" what what}',
    [["foo", null, "{ what what"]]],
-  
+
   // - alternate syntax
+  // things that would be illegal but for our guards
+  ["@foo|{{{{}|",
+   [["foo", null, "{{{"]]],
   // things that would normally match but for our guards
   ["@foo|<<{}>>|",
    [["foo", null, ""]]],
@@ -108,8 +113,28 @@ var AT_BREAKER_EXPECTATIONS = [
        [null, "baz", null],
        "bog"]]]],
 
-  // -- comments
+  // -- comments (without whitespace ramifications)
+  // - block
+  // simple
+  ["foo @;{ blah } baz",
+   "foo  baz"],
+  // nested
+  ["foo @;{ {blah} {} } baz",
+   "foo  baz"],
 
+  // - line
+  ["foo @;\nbar",
+   "foo bar"],
+  ["foo @; blah blah blah\nbar",
+   "foo bar"],
+
+  // -- whitespace (includes comment tricks)
+  // XXX these are not remotely the official semantics for whitespace; we
+  //  will need to get to those, although that might happen as a subsequent
+  //  pass.
+  // - line comments eat whitespace after the newline.
+  ["foo @;\n  \t bar",
+   "foo bar"],
 ];
 
 exports.atBreaker = function(test) {
