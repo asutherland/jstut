@@ -30,10 +30,11 @@ exports.testJsBreaking = function(test) {
     var oExpect = {val: expectation[1]};
     var results = syn.textStreamAtBreaker(testString, ctx);
     results = results.map(function(rv) {
-      if (typeof(rv) == "object" &&
-          ("length" in rv) && rv[2] instanceof reader_js.JSBlock)
-        return rv[2].text;
-      return rv;
+      if (typeof(rv) == "string")
+        return rv;
+      if (rv instanceof reader_js.JSBlock)
+        return rv.text;
+      return [rv.name, rv.svals, rv.textStream];
     });
     var oResult = {val: results};
     test.assertEqual(JSON.stringify(oExpect), JSON.stringify(oResult),

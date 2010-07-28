@@ -187,7 +187,23 @@ exports.atBreaker = function(test) {
     var expectation = AT_BREAKER_EXPECTATIONS[i];
     var testString = expectation[0];
     var oExpect = {val: expectation[1]};
-    var oResult = {val: syn.textStreamAtBreaker(testString, ctx)};
+    var results = syn.textStreamAtBreaker(testString, ctx);
+    if (typeof(results) == "object") {
+      function transformy(r) {
+        if (typeof(r) !== "object" || r == null)
+          return r;
+        return r.map(function(rv) {
+          if (typeof(rv) !== "object" || r == null)
+            return rv;
+          if (rv instanceof syn.AtCommand)
+            return [rv.name, transformy(rv.svals), transformy(rv.textStream)];
+          throw new Error("Unexpected result value type: " + rv +
+                          " on " + testString);
+        });
+      }
+      results = transformy(results);
+    }
+    var oResult = {val: results};
     test.assertEqual(JSON.stringify(oExpect), JSON.stringify(oResult),
                      "Test string: '" + testString + "' failure.");
   }
