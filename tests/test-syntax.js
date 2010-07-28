@@ -37,12 +37,36 @@ exports.nestedCommentWalker = function(test) {
 };
 
 var SEXPR_EXPECTATIONS = [
+  ["",
+   []],
+  ["0",
+   [0]],
+  [" 0 ",
+   [0]],
+  ["0 1 2",
+   [0, 1, 2]],
+  ['"foo"',
+   ["foo"]],
+  ['"foo" "bar"',
+   ["foo", "bar"]],
+  ['"foo bar"',
+   ["foo bar"]],
+  ["#t #f #t",
+   [true, false, true]],
 ];
-/*
-exports.sexprParser = function(test) {
 
+exports.sexprParser = function(test) {
+  var ctx = new loader.ParserContext("test input");
+  for (var i = 0; i < SEXPR_EXPECTATIONS.length; i++) {
+    var expectation = SEXPR_EXPECTATIONS[i];
+    var testString = expectation[0];
+    var oExpect = {val: expectation[1]};
+    var oResult = {val: syn.sexprParser(testString, ctx)[0]};
+    test.assertEqual(JSON.stringify(oExpect), JSON.stringify(oResult),
+                     "Test string: '" + testString + "' failure.");
+  }
 };
-*/
+
 
 var AT_BREAKER_EXPECTATIONS = [
   // -- absolute basics
@@ -50,20 +74,20 @@ var AT_BREAKER_EXPECTATIONS = [
    "foo"],
   ["@foo",
    [["foo", null, null]]],
-  ["@[foo]",
-   [[null, "foo", null]]],
+  ['@["foo"]',
+   [[null, ["foo"], null]]],
   ["@{foo}",
    [[null, null, "foo"]]],
-  ["@foo[bar]",
-   [["foo", "bar", null]]],
+  ["@foo[0]",
+   [["foo", [0], null]]],
   ["@foo{baz}",
    [["foo", null, "baz"]]],
-  ["@[bar]{baz}",
-   [[null, "bar", "baz"]]],
-  ["@foo[bar]{baz}",
-   [["foo", "bar", "baz"]]],
+  ["@[5 5]{baz}",
+   [[null, [5, 5], "baz"]]],
+  ['@foo["bar"]{baz}',
+   [["foo", ["bar"], "baz"]]],
   ["@foo[]{}",
-   [["foo", "", ""]]],
+   [["foo", [], ""]]],
 
   // -- basic sequence support
   ["foo @bar baz",
@@ -103,11 +127,11 @@ var AT_BREAKER_EXPECTATIONS = [
   ["@foo|<<{@bar @[baz]}>>|",
    [["foo", null, "@bar @[baz]"]]],
   // escaped things that do match
-  ["@foo|<<{|<<@bar |<<@[baz]}>>|",
+  ["@foo|<<{|<<@bar |<<@[#t]}>>|",
    [["foo", null, [
        ["bar", null, null],
        " ",
-       [null, "baz", null]]]]],
+       [null, [true], null]]]]],
 
   // -- expression escape
   ["@|foo|",
