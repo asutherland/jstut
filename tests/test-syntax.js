@@ -1,4 +1,5 @@
 var syn = require("narscribblus/scribble-syntax");
+var loader = require("narscribblus/scribble-loader");
 
 var ALT_SYNTAX_MIRROR_EXPECTATIONS = [
   ["|{", "}|"],
@@ -34,6 +35,14 @@ exports.nestedCommentWalker = function(test) {
     test.assertEqual(expectedEndex, actualEndex, "expected != actual");
   }
 };
+
+var SEXPR_EXPECTATIONS = [
+];
+/*
+exports.sexprParser = function(test) {
+
+};
+*/
 
 var AT_BREAKER_EXPECTATIONS = [
   // -- absolute basics
@@ -138,11 +147,12 @@ var AT_BREAKER_EXPECTATIONS = [
 ];
 
 exports.atBreaker = function(test) {
+  var ctx = new loader.ParserContext("test input");
   for (var i = 0; i < AT_BREAKER_EXPECTATIONS.length; i++) {
     var expectation = AT_BREAKER_EXPECTATIONS[i];
     var testString = expectation[0];
     var oExpect = {val: expectation[1]};
-    var oResult = {val: syn.textStreamAtBreaker(testString)};
+    var oResult = {val: syn.textStreamAtBreaker(testString, ctx)};
     test.assertEqual(JSON.stringify(oExpect), JSON.stringify(oResult),
                      "Test string: '" + testString + "' failure.");
   }
