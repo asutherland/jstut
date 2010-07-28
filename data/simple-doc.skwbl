@@ -1,0 +1,9 @@
+#lang narscribblus/manual
+
+@section{World}
+
+Hello, world!
+
+@section{You}
+
+Hello, you!
