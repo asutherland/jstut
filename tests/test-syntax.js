@@ -1,3 +1,7 @@
+/**
+ * Test scribble syntax parsing fundamentals.
+ **/
+
 var syn = require("narscribblus/scribble-syntax");
 var loader = require("narscribblus/scribble-loader");
 
@@ -168,6 +172,13 @@ var AT_BREAKER_EXPECTATIONS = [
   // - line comments eat whitespace after the newline.
   ["foo @;\n  \t bar",
    "foo bar"],
+
+  // -- cody body complexity
+  ["@foo[@{bar}   5\n  @{baz}]",
+   [["foo", [
+     [null, null, "bar"],
+     5,
+     [null, null, "baz"]], null]]],
 ];
 
 exports.atBreaker = function(test) {
