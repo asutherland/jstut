@@ -1,0 +1,15 @@
+This is a copy of narcissus from jsctags.  It has the advantage of already
+having been converted to CommonJS and jsctags being developed by a contributor
+to upstream narcissus.  It also has gained some JS 1.8 magic that is generally
+useful.  It loses the execution capabilities of narcissus but gains some
+'abstract interpretation' capabilities that are probably most in line with what
+we want out of narcissus anyways.  Specifically, we want to be able to map
+symbols to their conceptual origin for the purposes of documentation.
+
+The base copy is of:
+
+http://github.com/pcwalton/jsctags.git
+18be5e3ef5bd05136359c3f06763508ed0d5dfa5
+
+I am also adding at least one new exported method for our parsing needs but
+do not expect to make any meaningful changes that would result in conflicts.
