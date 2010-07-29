@@ -1,6 +1,7 @@
 {
-    "id": "jid0-t2Pet1wxsgrq9eqr2RydhdEQni0", 
+    "id": "jid0-K2MN8xCCEqJGN1FjX6Jcxp16hwQ", 
     "main": "narscribblus/main", 
     "name": "narscribblus", 
-    "description": "Documentation tool inspired by racket's scribble."
+    "description": "Documentation tool inspired by racket's scribble.",
+    "dependencies": ["misc"]
 }
