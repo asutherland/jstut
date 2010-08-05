@@ -1,0 +1,9 @@
+.edcode-container[mode=edit] > .edcode-doedit,
+.edcode-container[mode=edit] > .syntax {
+  display: none;
+}
+
+.edcode-container[mode=display] > .edcode-apply,
+.edcode-container[mode=display] > .edcode-editor {
+  display: none;
+}
