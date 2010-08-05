@@ -1,0 +1,42 @@
+/* We're basing the theme off of Radu Dineiu <radu.dineiu@gmail.com>'s
+ *  "rdark" vim colorscheme, which can be found at: http://ld.yi.org/vim/rdark/
+ */
+
+.syntax {
+  background-color: #1e2426;
+  color: #babdb6;
+}
+
+.syntax .c {color: #656763;}
+
+.syntax .kc {color: #eeeeec;}
+.syntax .kf {color: #eeeeec;}
+.syntax .ke {color: #eeeeec;}
+.syntax .kv {color: #eeeeec;}
+.syntax .kn {color: #eeeeec;}
+.syntax .kr {color: #eeeeec;}
+.syntax .km {color: #eeeeec;}
+.syntax .kt {color: #eeeeec;}
+.syntax .kx {color: #eeeeec;}
+.syntax .kb {color: #eeeeec;}
+.syntax .ku {color: #eeeeec;}
+
+.syntax .ps {color: #888a85;}
+.syntax .pb {color: #888a85;}
+.syntax .pr {color: #888a85;}
+.syntax .pc {color: #888a85;}
+.syntax .pp {color: #888a85;}
+
+.syntax .o {color: #888a85;}
+.syntax .ok {color: #888a85;}
+.syntax .od {color: #888a85;}
+.syntax .oc {color: #888a85;}
+.syntax .om {color: #888a85;}
+.syntax .omu {color: #888a85;}
+.syntax .ou {color: #888a85;}
+.syntax .ot {color: #888a85;}
+
+.syntax .i {color: #ffffff;}
+.syntax .n {color: #8ae234;}
+.syntax .s {color: #fcaf3e;}
+.syntax .r {color: #fcaf3e;}
