@@ -1,5 +1,7 @@
 /* We're basing the theme off of Radu Dineiu <radu.dineiu@gmail.com>'s
  *  "rdark" vim colorscheme, which can be found at: http://ld.yi.org/vim/rdark/
+ * Well, more specifically, also a bit off the doccelerator theme based off of
+ *  the above.
  */
 
 .syntax {
@@ -26,6 +28,7 @@
 .syntax .pr {color: #888a85;}
 .syntax .pc {color: #888a85;}
 .syntax .pp {color: #888a85;}
+.syntax .pq {color: #888a85;}
 
 .syntax .o {color: #888a85;}
 .syntax .ok {color: #888a85;}
