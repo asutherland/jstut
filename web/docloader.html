@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html style="height: 100%; padding: 0; margin: 0; border: 0; overflow: none;">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Narscribblus doc loader</title>
+    <script type="text/javascript">
+      var console;
+      if (!console)
+        console = {
+          log: function() {},
+          error: function() {},
+          info: function() {},
+          warn: function() {},
+      };
+      function dump(aMsgWithNewline) {
+        console.log(aMsgWithNewline.replace("\n", "", "g"));
+      }
+    </script>
+    <script type="text/javascript" src="../../teleport/lib/teleport.js"></script>
+  <script>
+    require.Sandbox({
+      global: window,
+      catalog: {
+        "narscribblus": { path: "../" },
+        // let's know about wmsy even though, strictly speaking, we do not as
+        //  far as proper dependency stuff goes...
+        "wmsy": { path: "../../wmsy/" },
+      },
+    }).main("narscribblus/web-loader-teleport");
+  </script>
+  </head>
+<body id="body" style="height: 100%; padding: 0; margin: 0; border: 0; overflow: none;">
+</body>
+</html>
