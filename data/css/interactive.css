@@ -8,6 +8,18 @@
   padding: 0;
 }
 
+.edcode-container {
+  border: 1px black solid;
+  -moz-border-radius: 2px;
+  -webkit-border-radius: 2px;
+  border-radius: 2px;
+  margin: 0.2em 0;
+}
+
+.syntax {
+  margin: 0;
+}
+
 .edcode-container[mode=edit] > .edcode-doedit,
 .edcode-container[mode=edit] > .syntax {
   display: none;
