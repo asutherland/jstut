@@ -2,7 +2,7 @@
  * Test scribble syntax parsing fundamentals.
  **/
 
-var syn = require("narscribblus/scribble-syntax");
+var syn = require("narscribblus/readers/scribble-syntax");
 var loader = require("narscribblus/scribble-loader");
 
 var ALT_SYNTAX_MIRROR_EXPECTATIONS = [
@@ -57,6 +57,8 @@ var SEXPR_EXPECTATIONS = [
    ["foo bar"]],
   ["#t #f #t",
    [true, false, true]],
+  ["#:a #:foo #:bar",
+   [new syn.Keyword("a"), new syn.Keyword("foo"), new syn.Keyword("bar")]],
 ];
 
 exports.sexprParser = function(test) {

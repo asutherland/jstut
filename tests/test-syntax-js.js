@@ -1,4 +1,4 @@
-var syn = require("narscribblus/scribble-syntax");
+var syn = require("narscribblus/readers/scribble-syntax");
 var loader = require("narscribblus/scribble-loader");
 
 var js_simpleFunc = "function foo() {}";
@@ -21,7 +21,7 @@ var JS_BREAKER_EXPECTATIONS = [
 
 exports.testJsBreaking = function(test) {
   var ctx = new loader.ParserContext("test input");
-  var reader_js = require("narscribblus/reader-js");
+  var reader_js = require("narscribblus/readers/js");
   ctx.readerMap["js"] = reader_js.reader_js;
 
   for (var i = 0; i < JS_BREAKER_EXPECTATIONS.length; i++) {
