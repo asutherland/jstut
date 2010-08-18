@@ -59,6 +59,8 @@ var SEXPR_EXPECTATIONS = [
    [true, false, true]],
   ["#:a #:foo #:bar",
    [new syn.Keyword("a"), new syn.Keyword("foo"), new syn.Keyword("bar")]],
+  ["foo Bar",
+   [new syn.Identifier("foo"), new syn.Identifier("Bar")]],
 ];
 
 exports.sexprParser = function(test) {
