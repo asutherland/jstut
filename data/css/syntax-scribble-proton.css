@@ -12,6 +12,7 @@
   background-color: #f0f0f0;
 }
 
+.syntax .xer {color: #a03020;}
 
 .syntax .xaa {color: #5080b0;}
 .syntax .xab {}
@@ -20,10 +21,12 @@
 
 .syntax .xd1 {background-color: #eeeeee;}
 .syntax .xd2 {background-color: #dddddd;}
-.syntax .xd3 {background-color: #cccccc;}
-.syntax .xd4 {background-color: #bbbbbb;}
-.syntax .xd5 {background-color: #aaaaaa;}
-.syntax .xd6 {background-color: #999999;}
+.syntax .xd3 {background-color: #d5d5d5;}
+.syntax .xd4 {background-color: #cccccc;}
+.syntax .xd5 {background-color: #c4c4c4;}
+.syntax .xd6 {background-color: #bbbbbb;}
+.syntax .xd7 {background-color: #b3b3b3;}
+.syntax .xd8 {background-color: #aaaaaa;}
 
 .syntax .xsn {color: #508040;}
 .syntax .xss {color: #a07060; background-color: #f0ece8; font-style: italic;}
