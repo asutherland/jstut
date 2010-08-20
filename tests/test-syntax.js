@@ -143,15 +143,15 @@ var AT_BREAKER_EXPECTATIONS = [
 
   // -- expression escape
   ["@|foo|",
-   [[null, "foo", null]]],
+   [[null, [new syn.Identifier("foo")], null]]],
   ["@{foo @|bar|}",
    [[null, null, [
        "foo ",
-       [null, "bar", null]]]]],
+       [null, [new syn.Identifier("bar")], null]]]]],
   ["@foo{bar@|baz|bog}",
    [["foo", null, [
        "bar",
-       [null, "baz", null],
+       [null, [new syn.Identifier("baz")], null],
        "bog"]]]],
 
   // -- comments (without whitespace ramifications)
@@ -179,10 +179,13 @@ var AT_BREAKER_EXPECTATIONS = [
 
   // -- cody body complexity
   ["@foo[@{bar}   5\n  @{baz}]",
-   [["foo", [
-     [null, null, "bar"],
-     5,
-     [null, null, "baz"]], null]]],
+   [["foo",
+     [
+       [null, null, "bar"],
+       5,
+       [null, null, "baz"]
+     ],
+     null]]],
 ];
 
 exports.atBreaker = function(test) {
@@ -201,6 +204,8 @@ exports.atBreaker = function(test) {
             return rv;
           if (rv instanceof syn.AtCommand)
             return [rv.name, transformy(rv.svals), transformy(rv.textStream)];
+          if (rv instanceof syn.Identifier)
+            return rv;
           throw new Error("Unexpected result value type: " + rv +
                           " on " + testString);
         });

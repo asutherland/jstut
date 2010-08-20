@@ -1,0 +1,34 @@
+/* Based on the vim proton theme:
+ *  http://vimcolorschemetest.googlecode.com/svn/colors/proton.vim
+ *
+ * Class names are chosen to avoid colliding with those we already allocated to
+ *  JS syntax (so that we can have things exist in a single pre element).
+ *  Since we have relatively few token classes, we just prefix everything with x.
+ *  xa: at-sign related, xs: sexpr related.
+ */
+
+.syntax {
+  color: #404040;
+  background-color: #f0f0f0;
+}
+
+
+.syntax .xaa {color: #5080b0;}
+.syntax .xab {}
+.syntax .xas {}
+.syntax .xax {color: #5080b0;}
+
+.syntax .xd1 {background-color: #eeeeee;}
+.syntax .xd2 {background-color: #dddddd;}
+.syntax .xd3 {background-color: #cccccc;}
+.syntax .xd4 {background-color: #bbbbbb;}
+.syntax .xd5 {background-color: #aaaaaa;}
+.syntax .xd6 {background-color: #999999;}
+
+.syntax .xsn {color: #508040;}
+.syntax .xss {color: #a07060; background-color: #f0ece8; font-style: italic;}
+.syntax .xsi {}
+.syntax .xsb {color: #508040;}
+.syntax .xsk {color: #607080; font-style: italic;}
+
+.syntax .xac {color: #9098a0;}
