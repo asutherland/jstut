@@ -7,6 +7,7 @@ var js_multilineFunc = "function foo(a, b, c) {\nvar d =\n  5;\n}";
 var js_multiStatements = "var a = 5;\nvar b = 9,\nc = /foo/;";
 
 var JS_BREAKER_EXPECTATIONS = [
+// -- straightforward breaking
 ["@js{var a;}",
  ["var a;"]],
 ["@js{" + js_simpleFunc + "}",
@@ -17,6 +18,32 @@ var JS_BREAKER_EXPECTATIONS = [
  [js_multilineFunc]],
 ["@js{" + js_multiStatements + "}",
  [js_multiStatements]],
+// -- whitespace normalization
+// - basic normalization
+// (lose the intro line and trailing newline)
+["@js{\n" +
+ "  var a = 5;\n" +
+ "  var b = 6;\n" +
+ "}",
+ ["var a = 5;\n" +
+  "var b = 6;"]],
+// - leftmost column becomes zero column
+["@js{\n" +
+ "  var a = 5;\n" +
+ "    var b = 6;\n}",
+ ["var a = 5;\n" +
+  "  var b = 6;"]],
+["@js{\n" +
+ "    var a = 5;\n" +
+ "  var b = 6;\n}",
+ ["  var a = 5;\n" +
+  "var b = 6;"]],
+// (pretend the whole js construct is indented
+["@js{\n" +
+ "    var a = 5;\n" +
+ "      var b = 6;\n  }",
+ ["var a = 5;\n" +
+  "  var b = 6;"]],
 ];
 
 exports.testJsBreaking = function(test) {
@@ -33,7 +60,7 @@ exports.testJsBreaking = function(test) {
       if (typeof(rv) == "string")
         return rv;
       if (rv instanceof reader_js.JSBlock)
-        return rv.text;
+        return rv.flattenTokenStream();
       return [rv.name, rv.svals, rv.textStream];
     });
     var oResult = {val: results};
