@@ -18,6 +18,7 @@
 
 .syntax {
   margin: 0;
+  padding: 2px;
 }
 
 .edcode-container[mode=edit] > .edcode-doedit,
