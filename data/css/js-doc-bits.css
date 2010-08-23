@@ -1,0 +1,46 @@
+
+.typedef {
+}
+
+.dict {
+}
+
+.group {
+}
+
+.groupkids {
+}
+
+.dictof {
+}
+
+.list {
+}
+
+.oneof {
+}
+
+.args {
+}
+
+.identifier {
+}
+
+.string {
+}
+
+.rest {
+}
+
+
+.typeName {
+  font-weight: bold;
+  color: #4169E1;
+  font-family: sans-serif;
+}
+
+.keyName, .attrName {
+  font-weight: bold;
+  color: #8A2BE2;
+  font-family: sans-serif;
+}
