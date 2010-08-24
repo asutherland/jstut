@@ -33,6 +33,11 @@
 }
 
 
+.groupName {
+  font-weight: bold;
+  font-family: sans-serif;
+}
+
 .typeName {
   font-weight: bold;
   color: #4169E1;
