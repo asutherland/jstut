@@ -49,7 +49,7 @@ var mockXHR_prototype = {
 /**
  * Test the list by making a fake xhr that just returns that thing up there.
  */
-exports.testList = function(test) {
+exports.testWebList = function(test) {
   var loader = test.makeSandboxedLoader({
     moduleOverrides: {
       xhr: {
@@ -65,3 +65,20 @@ exports.testList = function(test) {
   });
   test.assert(gotAResult, "got a result");
 };
+
+/**
+ * The local file thing also needs to work the same way.  Because we do not
+ *  expect our package to remain static and don't want to have to constantly
+ *  remaster this test, we just look for specific expected results.
+ */
+var url = require("url");
+var self = require("self");
+exports.testLocalList = function(test) {
+  var unifile = require("unifile");
+  var path = url.toFilename(self.data.url("../"));
+  var results;
+  unifile.list(path, function (items) {
+    results = items;
+  });
+
+}
