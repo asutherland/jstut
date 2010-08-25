@@ -2,6 +2,23 @@ h1 {
   margin: 0.3em 0px;
 }
 
+.danet {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  padding: 0;
+  margin: 0;
+}
+
+.danet a {
+  font-size: 70%;
+  text-decoration: none;
+  padding: 0;
+  margin: 0;
+  margin-right: 2px;
+  color: black;
+}
+
 .bespin .container {
   vertical-align: top;
 }
