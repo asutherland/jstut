@@ -1,3 +1,7 @@
+h1 {
+  margin: 0.3em 0px;
+}
+
 .bespin .container {
   vertical-align: top;
 }
@@ -53,6 +57,31 @@
 
 .darea-out {
   border: #8f5902 1px solid;
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+  background-color: #ffffff;
+  padding: 4px;
+}
+
+.traceout-container {
+  border: #c4a000 1px solid;
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+  background-color: #edd400;
+  padding: 1px;
+  margin-bottom: 2px;
+}
+
+.traceout-label {
+  display: inline-block;
+  font-family: sans-serif;
+  margin-left: 0.2em;
+}
+
+.traceout-output {
+  border: #edd400 1px solid;
   -moz-border-radius: 4px;
   -webkit-border-radius: 4px;
   border-radius: 4px;
