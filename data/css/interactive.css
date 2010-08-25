@@ -31,6 +31,10 @@
   display: none;
 }
 
+.edcode-error {
+  color: red;
+}
+
 .darea-container {
   border: #8f5902 1px solid;
   -moz-border-radius: 4px;
