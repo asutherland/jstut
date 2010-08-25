@@ -31,6 +31,31 @@
   display: none;
 }
 
+.darea-container {
+  border: #8f5902 1px solid;
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+  background-color: #e9b96e;
+  padding: 1px;
+  margin-bottom: 2px;
+}
+
+.darea-label {
+  display: inline-block;
+  font-family: sans-serif;
+  margin-left: 0.2em;
+}
+
+.darea-out {
+  border: #8f5902 1px solid;
+  -moz-border-radius: 4px;
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+  background-color: #ffffff;
+  padding: 4px;
+}
+
 .collapsey-container {
   border: #4e9a06 1px solid;
   -moz-border-radius: 4px;
