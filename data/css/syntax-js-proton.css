@@ -5,6 +5,12 @@
 .syntax {
   color: #404040;
   background-color: #f0f0f0;
+  margin-top: 1em;
+  margin-bottom: 0;
+}
+
+.syntax + .syntax {
+  margin: 0;
 }
 
 /* vim Comment */
