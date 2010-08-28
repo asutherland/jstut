@@ -65,3 +65,8 @@
 .syntax .pq {color: #a07060; background-color: #f0ece8; font-style: italic;}
 /* vim PreProc */
 .syntax .r {color: #605080; background-color: #dcd8e0; font-style: italic;}
+
+.syntax .hl {
+  background-color: #ffffff;
+  outline: thin solid green;
+}
