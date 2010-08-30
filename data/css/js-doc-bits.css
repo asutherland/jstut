@@ -5,12 +5,6 @@
 .dict {
 }
 
-.group {
-}
-
-.groupkids {
-}
-
 .dictof {
 }
 
@@ -33,10 +27,6 @@
 }
 
 
-.groupName {
-  font-weight: bold;
-  font-family: sans-serif;
-}
 
 .typeName {
   font-weight: bold;
@@ -67,4 +57,44 @@
 
 .gettersetter > dt {
   color: gray;
+}
+
+/* serious attempts at prettiness follow. perhaps without success. */
+.attrName {
+  float: left;
+  clear: left;
+  width: 10em;
+}
+
+.typeBrief {
+  margin: 0 0 0 11em;
+}
+
+.typeDetail {
+  margin: 0 0 0 2em;
+}
+
+.attrDesc {
+  margin: 0 0 0 1em;
+}
+
+.briefGroupName {
+  font-weight: bold;
+  font-family: sans-serif;
+}
+
+.briefGroup {
+}
+
+.group {
+  padding-top: 1em;
+}
+
+.groupName {
+  font-weight: bold;
+  font-family: sans-serif;
+  background-color: #dddddd;
+}
+
+.groupContents {
 }
