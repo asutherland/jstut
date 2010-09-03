@@ -3,5 +3,5 @@
     "main": "narscribblus/main", 
     "name": "narscribblus", 
     "description": "Documentation tool inspired by racket's scribble.",
-    "dependencies": ["misc"]
+    "dependencies": []
 }
