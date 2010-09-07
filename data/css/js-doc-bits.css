@@ -18,6 +18,7 @@
 }
 
 .identifier {
+  font-family: monospace;
 }
 
 .string {
@@ -36,8 +37,13 @@
 
 .keyName, .attrName {
   font-weight: bold;
-  color: #8A2BE2;
+  color: #204a87;
   font-family: sans-serif;
+}
+
+.retVal {
+  color: gray !important;
+  font-size: 80%;
 }
 
 .namespace {
@@ -68,6 +74,7 @@
 
 .typeBrief {
   margin: 0 0 0 11em;
+  min-height: 1em;
 }
 
 .typeDetail {
@@ -76,10 +83,20 @@
 
 .attrDesc {
   margin: 0 0 0 1em;
+  min-height: 1em;
+}
+
+.attrDesc p {
+  margin: 0;
+}
+
+.attrDesc p + p {
+  margin: 1em 0;
 }
 
 .briefGroupName {
   font-weight: bold;
+  font-size: 90%;
   font-family: sans-serif;
 }
 
