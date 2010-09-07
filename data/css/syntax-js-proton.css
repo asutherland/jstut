@@ -74,3 +74,12 @@
 .syntax a {
   cursor: pointer;
 }
+
+.syntax .popupsource {
+  background-color: #ffffff;
+  outline: thin solid blue;
+}
+
+.syntax .popupsource span {
+  background-color: #ffffff;
+}
