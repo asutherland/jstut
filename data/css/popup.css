@@ -1,0 +1,11 @@
+#thepopup {
+  position: absolute;
+  left: 20%;
+  width: 60%;
+
+  border: 1px #000000 solid;
+  -moz-border-radius: 8px;
+  -webkit-border-radius: 8px;
+  border-radius: 8px;
+  background-color: #ffffff;
+}

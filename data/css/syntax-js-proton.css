@@ -70,3 +70,7 @@
   background-color: #ffffff;
   outline: thin solid green;
 }
+
+.syntax a {
+  cursor: pointer;
+}
