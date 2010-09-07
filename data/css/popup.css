@@ -6,6 +6,8 @@
   border: 1px blue solid;
   background-color: #ffffff;
   padding: 4px;
+
+  max-height: 60%;
 }
 
 #thepopupconnector {
