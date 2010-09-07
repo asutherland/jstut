@@ -94,13 +94,18 @@
   margin: 1em 0;
 }
 
-.briefGroupName {
+.briefGroupName, .citeGroupName {
   font-weight: bold;
   font-size: 90%;
   font-family: sans-serif;
 }
 
 .briefGroup {
+  display: inline-block;
+}
+
+.citeGroup {
+  display: inline-block;
 }
 
 .group {
