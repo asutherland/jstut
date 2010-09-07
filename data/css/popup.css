@@ -8,6 +8,7 @@
   padding: 4px;
 
   max-height: 60%;
+  overflow: auto;
 }
 
 #thepopupconnector {
