@@ -40,12 +40,15 @@
  *  directories and get their contents.
  **/
 
-// teleport exposes XMLHttpRequest this way
-var xhr = require("xhr");
-// teleport exposes an empty module; we are expected to die if we are used for
-//  local file access.
-var file = require("file");
-var pwomise = require("narscribblus/utils/pwomise");
+require.def("narscribblus-plat/utils/unifile",
+  [
+    "exports",
+    "narscribblus/utils/pwomise",
+  ],
+  function (
+    exports,
+    pwomise
+  ) {
 
 // apache always uses "
 var RE_LINK = /href="([^\"]+)"/g;
@@ -75,12 +78,13 @@ WebFile.prototype = {
  *  concern right now.
  */
 function webList(aPath) {
+  console.log("webList of", aPath);
   var deferred = pwomise.defer("webList", aPath);
-  var req = new xhr.XMLHttpRequest();
+  var req = new XMLHttpRequest();
   req.open("GET", aPath, true);
   req.addEventListener("load", function() {
     if (req.status != 200) {
-      deferred.reject();
+      deferred.resolve([]);
       return;
     }
 
@@ -130,3 +134,5 @@ exports.list = function(aPath) {
 exports.listMatchingDescendants = function(aPath) {
 
 };
+
+}); // end require.def

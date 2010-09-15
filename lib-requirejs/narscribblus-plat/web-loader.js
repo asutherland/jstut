@@ -35,15 +35,46 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-// the engine knows what our arguments were
-var engine = require("teleport/engine");
-var loader = require("narscribblus/scribble-loader");
-var pkginfo = require("narscribblus/package-info");
-var pwomise = require("narscribblus/utils/pwomise");
+require.def("narscribblus-plat/web-loader",
+  [
+    "exports",
+    "narscribblus/scribble-loader",
+    "narscribblus-plat/package-info",
+    "narscribblus/utils/pwomise",
+  ],
+  function (
+    exports,
+    loader,
+    pkginfo,
+    pwomise
+  ) {
+
 var when = pwomise.when;
 
+/**
+ * Explode window.location.search into a dictionary.
+ */
+function getEnv() {
+  var env = {};
+
+  var searchBits = window.location.search.substring(1).split("&");
+  for (var i = 0; i < searchBits.length; i++) {
+    var searchBit = searchBits[i];
+    // skip things without a payload.
+    if (searchBit.indexOf("=") <= 0)
+      continue;
+    var pair = searchBit.split("=", 2);
+    var key = decodeURIComponent(pair[0]);
+    var value = decodeURIComponent(pair[1]);
+    env[key] = value;
+  }
+
+  return env;
+};
+
 exports.main = function web_loader_teleport_main() {
-  if (!("doc" in engine.env) && !("src" in engine.env)) {
+  var env = getEnv();
+  if (!("doc" in env) && !("src" in env)) {
     var body = document.getElementsByTagName("body")[0];
     body.innerHTML = "I am going to level with you. " +
       "I need you to put the path of the narscribblus doc in the 'doc' " +
@@ -51,14 +82,14 @@ exports.main = function web_loader_teleport_main() {
       "like this one.  <i>Sniff sniff</i>.";
     return;
   }
-  if ("doc" in engine.env) {
-    var docPath = engine.env.doc;
+  if ("doc" in env) {
+    var docPath = env.doc;
     when(pkginfo.loadData(docPath),
          exports.showDoc.bind(null, docPath),
          explodeSadFace);
   }
-  else if ("src" in engine.env) {
-    var srcPath = engine.env.src;
+  else if ("src" in env) {
+    var srcPath = env.src;
     when(pkginfo.loadSource(srcPath),
          exports.showDoc.bind(null, srcPath),
          explodeSadFace);
@@ -66,14 +97,15 @@ exports.main = function web_loader_teleport_main() {
 };
 
 function explodeSadFace(aDocPath, aStatusCode) {
+  var env = getEnv();
   var body = document.getElementsByTagName("body")[0];
   if (aStatusCode == 404) {
     body.innerHTML = "We tried to find a document that does not exist: " +
-      engine.env.doc;
+      env.doc;
   }
   else {
     body.innerHTML = "I couldn't find the document: " +
-      engine.env.doc + "(" + aStatusCode + ")";
+      env.doc + "(" + aStatusCode + ")";
   }
 }
 
@@ -85,6 +117,7 @@ function explodeSadFace(aDocPath, aStatusCode) {
  *  live in.
  */
 exports.showDoc = function showDoc(aDocPath, aContents) {
+  var env = getEnv();
   var options = {
     /**
      * Link to a specific document.
@@ -108,15 +141,15 @@ exports.showDoc = function showDoc(aDocPath, aContents) {
       return "";
     },
   };
-  var docPath = engine.env.doc;
-  if ("src" in engine.env) {
+  var docPath = env.doc;
+  if ("src" in env) {
     options.lang = "narscribblus/js";
-    docPath = engine.env.src;
+    docPath = env.src;
   }
-  if ("forcelang" in engine.env)
-    options.forceLang = engine.env.forcelang;
-  if ("mode" in engine.env)
-    options.mode = engine.env.mode;
+  if ("forcelang" in env)
+    options.forceLang = env.forcelang;
+  if ("mode" in env)
+    options.mode = env.mode;
 
   when(loader.parseDocument(aContents, docPath, options),
        documentParsed);
@@ -147,9 +180,4 @@ function documentParsed(parseOutput) {
 };
 
 
-if (require.main == module) {
-  // defer to avoid errors being reported during the initial eval pass
-  setTimeout(function() {
-    exports.main();
-  }, 10);
-}
+}); // end require.def

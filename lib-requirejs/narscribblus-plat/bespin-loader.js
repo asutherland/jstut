@@ -35,34 +35,29 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-/**
- * For now, let's have our concept of a sandbox just be evaluating some code
- *  with our require handed in...
- */
-exports.makeSandbox = function makeSandbox(code, globals, callback) {
-  var globalStr, invokeArgs = [require];
-  globalStr = "";
-  for (var key in globals) {
-    globalStr += "," + key;
-    invokeArgs.push(globals[key]);
-  }
+require.def("narscribblus-plat/bespin-loader",
+  [
+    "exports",
+    "narscribblus-plat/package-info"
+  ],
+  function (
+    exports,
+    pkginfo
+  ) {
 
-  var deps = require.depends(code);
-  require.ensure(deps, function() {
-    console.info("success fetching deps for sandboxed code, running...");
-    var wrappedCode = "var funk = function(require" + globalStr + ") {" + code +
-                        "\n/**/}; funk;";
-    var dafunk;
-    try {
-      dafunk = eval(wrappedCode);
-    }
-    catch (ex) {
-      console.log("Errore!", ex, ex.fileName, ex.lineNumber);
-    }
-    dafunk.apply({}, invokeArgs);
-    if (callback)
-      callback();
-  }, function errDepFetch() {
-    console.error("problem fetching deps for sandboxed code");
-  });
+exports.loadBespin = function loadBespin(doc, callback) {
+  var win = doc.defaultView;
+  win.onBespinLoad = callback;
+
+  var head = doc.getElementsByTagName('head')[0];
+  var link = doc.createElement('link');
+  link.setAttribute("id", "bespin_base", "system");
+  link.setAttribute("href", self.data.url("bespin/"));
+  head.appendChild(link);
+
+  var script = doc.createElement("script");
+  script.src = pkginfo.dataDirUrl("narscribblus/bespin/BespinEmbedded.js");
+  head.appendChild(script);
 };
+
+}); // end require.def

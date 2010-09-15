@@ -3,8 +3,18 @@
  *  setTimeout when operating under teleport.
  **/
 
-var timer = require("timer");
+require.def("narscribblus-plat/event-loop",
+  [
+    "exports",
+    "timer",
+  ],
+  function (
+    exports,
+    timer
+  ) {
 
 exports.enqueue = function(task) {
   timer.setTimeout(task, 0);
 };
+
+});

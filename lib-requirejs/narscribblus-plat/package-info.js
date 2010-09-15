@@ -44,26 +44,28 @@
  * All public documentation lives in package-info.js.
  **/
 
-var pwomise = require("narscribblus/utils/pwomise");
-var catalog = require("teleport/packages").catalog;
+require.def("narscribblus-plat/package-info",
+  [
+    "exports",
+    "require",
+    "narscribblus/utils/pwomise",
+  ],
+  function(
+    exports,
+    require,
+    pwomise
+  ) {
 
-// from teleport.js, but modified
-function path(id, suffix, dirtype, repeatPackage) {
-  var url = id, name = id.split("/")[0];
-  if (name in catalog) {
-    var descriptor = catalog[name];
-    url = descriptor.path
-      + ((descriptor.directories && (dirtype in descriptor.directories))
-         ? descriptor.directories[dirtype] : dirtype)
-      + "/" + (repeatPackage ? (name + "/") : "") +
-      id.substr(name.length + 1);
-  }
-  return url + suffix;
-}
+var config = require.config;
+var dataPaths = config.dataPaths;
 
+/**
+ * Returns a promise that provides the source of a given module.
+ */
 function loadSource(aSourceRef) {
   var deferred = pwomise.defer("load.source", aSourceRef);
-  var url = path(aSourceRef, ".js", "lib", true);
+  var url = require.nameToUrl(aSourceRef, null);
+  console.log("loadSource", aSourceRef, url);
   var req = new XMLHttpRequest();
   req.open("GET", url, true);
   req.addEventListener("load", function() {
@@ -79,9 +81,19 @@ function loadSource(aSourceRef) {
 }
 exports.loadSource = loadSource;
 
+/**
+ * Load a data file from the given package.
+ */
 function loadData(aDataRef) {
   var deferred = pwomise.defer("load.data", aDataRef);
-  var url = path(aDataRef, "", "data", false);
+
+  var refParts = aDataRef.split("/");
+  var packageName = refParts[0];
+  var relPath = refParts.slice(1).join("/");
+
+  var url = config.baseUrl + packageName + "/data/" + relPath;
+  console.log("loadData", aDataRef, url);
+
   var req = new XMLHttpRequest();
   req.open("GET", url, true);
   req.addEventListener("load", function() {
@@ -98,6 +110,13 @@ function loadData(aDataRef) {
 exports.loadData = loadData;
 
 function dataDirUrl(aDataRef) {
-  return path(aDataRef, "", "data", false);
+  var refParts = aDataRef.split("/");
+  var packageName = refParts[0];
+  var relPath = refParts.slice(1).join("/");
+
+  var url = config.baseUrl + packageName + "/data/" + relPath;
+  return url;
 }
 exports.dataDirUrl = dataDirUrl;
+
+}); // end require.def
