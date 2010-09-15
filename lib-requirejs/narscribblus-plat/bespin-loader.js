@@ -52,7 +52,7 @@ exports.loadBespin = function loadBespin(doc, callback) {
   var head = doc.getElementsByTagName('head')[0];
   var link = doc.createElement('link');
   link.setAttribute("id", "bespin_base", "system");
-  link.setAttribute("href", self.data.url("bespin/"));
+  link.setAttribute("href", pkginfo.dataDirUrl("narscribblus/bespin/"));
   head.appendChild(link);
 
   var script = doc.createElement("script");
