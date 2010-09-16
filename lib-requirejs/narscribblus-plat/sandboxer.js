@@ -95,7 +95,7 @@ require.def("narscribblus-plat/sandboxer",
  */
 exports.makeSandbox = function makeSandbox(name, innerDoc,
                                            code, args, callback) {
-  var globalStr, invokeArgs = [require];
+  var globalStr, invokeArgs = [];
   globalStr = "";
   for (var key in args) {
     if (globalStr.length)
@@ -115,6 +115,7 @@ exports.makeSandbox = function makeSandbox(name, innerDoc,
 
   outerWin.sandboxCallbacks[name] = function(dafunk) {
     dafunk.apply({}, invokeArgs);
+    callback();
   };
 
   var wrappedCode = "require(['require'," + deps.join(",") + "],\n" +
