@@ -3,6 +3,8 @@
  *  under the MPL1.1/LGPL2.1/GPL2 tri-license.
  */
 
+const {Cc,Ci,Cr} = require("chrome");
+
 var xpcom = require("xpcom");
 
 var xulNs = "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul";

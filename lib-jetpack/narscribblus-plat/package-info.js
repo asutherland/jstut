@@ -44,16 +44,36 @@
  * All public documentation lives in package-info.js.
  **/
 
+var file = require("file");
+var url = require("url");
+
 function loadSource(aSourceRef) {
   var loader = packaging.harnessService.loader;
-  var path = loader.fs.resolveModule(null, moduleName);
+  var path = loader.fs.resolveModule(null, aSourceRef);
   var o = loader.fs.getFile(path);
 
   return o.contents;
 }
 exports.loadSource = loadSource;
 
-function loadData(aDataRef) {
+var packageData = packaging.options.packageData;
 
+function loadData(aDataRef) {
+  var path = url.toFilename(dataDirUrl(aDataRef));
+  return file.read(path);
 }
 exports.loadData = loadData;
+
+function dataDirUrl(aDataRef) {
+  var refParts = aDataRef.split("/");
+  var packageName = refParts[0];
+  var relPath = refParts.slice(1).join("/");
+
+  console.log("package name", packageName, "data", packageData[packageName],
+              "relPath", relPath);
+  console.log("RETURNING", packageData[packageName] + relPath);
+  if (packageName in packageData)
+    return packageData[packageName] + relPath;
+  throw new Error("nothing is known about package " + packageName);
+}
+exports.dataDirUrl = dataDirUrl;

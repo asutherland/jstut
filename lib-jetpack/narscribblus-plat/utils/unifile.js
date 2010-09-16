@@ -44,10 +44,16 @@ require.def("narscribblus-plat/utils/unifile",
   [
     "exports",
     "narscribblus/utils/pwomise",
+    "xhr",
+    "file",
+    "url",
   ],
   function (
     exports,
-    pwomise
+    pwomise,
+    xhr,
+    file,
+    url
   ) {
 
 // apache always uses "
@@ -79,7 +85,7 @@ WebFile.prototype = {
  */
 function webList(aPath) {
   var deferred = pwomise.defer("webList", aPath);
-  var req = new XMLHttpRequest();
+  var req = new xhr.XMLHttpRequest();
   req.open("GET", aPath, true);
   req.addEventListener("load", function() {
     if (req.status != 200) {
@@ -124,10 +130,13 @@ exports.normFile = function(aPathy) {
 };
 
 exports.list = function(aPath) {
-  //if (RE_HTTP.test(aPath)) {
+  if (RE_HTTP.test(aPath)) {
     return webList(aPath);
-  //}
-  //return file.list(aPath);
+  }
+  var path = url.toFilename(aPath);
+  if (file.exists(path))
+    return file.list(path);
+  return [];
 };
 
 exports.listMatchingDescendants = function(aPath) {

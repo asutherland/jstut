@@ -44,35 +44,93 @@ require.def("narscribblus-plat/sandboxer",
   ) {
 
 /**
- * For now, let's have our concept of a sandbox just be evaluating some code
- *  with our require handed in...
+ * Create a sandbox by:
+ * @itemize[
+ *   @item{
+ *     Creating a script tag in the requested document.
+ *   }
+ *   @item{
+ *     Using a regex against the code in question to figure out what the
+ *     dependencies are so that the code can use synchronous require.  (When
+ *     RequireJS supports this, we will use that instead.)  Use that to wrap
+ *     the code in a require()'d block dependent on those modules.
+ *   }
+ *   @item{
+ *     Wrapping the code so that we are notified after all of its dependencies
+ *     are loaded and it is parsed up.  Then we are able to directly invoke
+ *     the function with the arguments passed in for execution.
+ *   }
+ * ]
+ *
+ * We currently do not do but should consider:
+ * @itemize[
+ *   @item{
+ *     Try and run things in their own independent universe.  Specifically, we
+ *     do not instantiate new instances of the dependent modules, so the
+ *     sandboxed code is not really sandboxed right now.  Since we do not
+ *     mediate DOM interaction or the like like jetpack tries to do, an iframe
+ *     that we can just destroy might be the best way to deal with that.
+ *   }
+ *   @item{
+ *     Support the executed code defining multiple modules on its own.
+ *   }
+ * ]
+ *
+ * @args[
+ *   @param[name String]{
+ *     Document-unique name for the code execution.
+ *   }
+ *   @param[doc Document]{
+ *     The DOM document in which
+ *   }
+ *   @param[code String]{
+ *     The source code to execute.
+ *   }
+ *   @param[args @dictof[
+ *     @key["variable name"]
+ *     @value["variable value"]
+ *   ]]
+ *   @param[callback]
+ * ]
  */
-exports.makeSandbox = function makeSandbox(code, globals, callback) {
+exports.makeSandbox = function makeSandbox(name, innerDoc,
+                                           code, args, callback) {
   var globalStr, invokeArgs = [require];
   globalStr = "";
-  for (var key in globals) {
-    globalStr += "," + key;
-    invokeArgs.push(globals[key]);
+  for (var key in args) {
+    if (globalStr.length)
+      globalStr += ",";
+    globalStr += key;
+    invokeArgs.push(args[key]);
   }
 
-  var deps = require.depends(code);
-  require.ensure(deps, function() {
-    console.info("success fetching deps for sandboxed code, running...");
-    var wrappedCode = "var funk = function(require" + globalStr + ") {" + code +
-                        "\n/**/}; funk;";
-    var dafunk;
-    try {
-      dafunk = eval(wrappedCode);
-    }
-    catch (ex) {
-      console.log("Errore!", ex, ex.fileName, ex.lineNumber);
-    }
+  var outerDoc = document;
+
+  var deps = [];
+  code.replace(/require\(("[^\"]*")\)/g,function(t,m){deps.push(m);});
+
+  var outerWin = outerDoc.defaultView;
+  if (!("sandboxCallbacks" in outerWin))
+    outerWin.sandboxCallbacks = {};
+
+  outerWin.sandboxCallbacks[name] = function(dafunk) {
     dafunk.apply({}, invokeArgs);
-    if (callback)
-      callback();
-  }, function errDepFetch() {
-    console.error("problem fetching deps for sandboxed code");
-  });
+  };
+
+  var wrappedCode = "require(['require'," + deps.join(",") + "],\n" +
+    "function(require) {" +
+    "sandboxCallbacks['" + name + "'](function(" + globalStr + ") {" +
+    code + "\n/**/})});";
+
+  var scriptId = "sandbox-" + name;
+  var scriptElem = outerDoc.getElementById(scriptId);
+  if (scriptElem) {
+    scriptElem.parentNode.removeChild(scriptElem);
+  }
+  scriptElem = outerDoc.createElement("script");
+  scriptElem.setAttribute("id", scriptId);
+  scriptElem.textContent = wrappedCode;
+  outerDoc.getElementsByTagName("head")[0].appendChild(scriptElem);
 };
 
 }); // end require.def

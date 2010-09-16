@@ -83,6 +83,8 @@ var mockXHR_prototype = {
   },
 };
 
+var pwomise = require("narscribblus/utils/pwomise");
+
 /**
  * Test the list by making a fake xhr that just returns that thing up there.
  */
@@ -92,30 +94,17 @@ exports.testWebList = function(test) {
       xhr: {
         XMLHttpRequest: mockXHR(FAKE_RESULT),
       },
+      // needs to use the same promise universe
+      "narscribblus/utils/pwomise": pwomise,
     },
   });
-  var gotAResult = false;
-  loader.require("narscribblus/utils/unifile")
-        .list("http://banana.banana/", function(items) {
+  var listPromise = loader
+    .require("narscribblus-plat/utils/unifile")
+    .list("http://banana.banana/");
+  pwomise.when(listPromise, function(items) {
     test.assertEqual(items.toString(), EXPECTED_RESULT.toString());
-    gotAResult = true;
+    test.done();
   });
-  test.assert(gotAResult, "got a result");
+  test.waitUntilDone(100);
 };
 
-/**
- * The local file thing also needs to work the same way.  Because we do not
- *  expect our package to remain static and don't want to have to constantly
- *  remaster this test, we just look for specific expected results.
- */
-var url = require("url");
-var self = require("self");
-exports.testLocalList = function(test) {
-  var unifile = require("unifile");
-  var path = url.toFilename(self.data.url("../"));
-  var results;
-  unifile.list(path, function (items) {
-    results = items;
-  });
-
-}

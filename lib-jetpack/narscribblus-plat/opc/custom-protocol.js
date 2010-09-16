@@ -34,6 +34,8 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
+const {Cc,Ci,Cr} = require("chrome");
+
 var xpcom = require("xpcom");
 
 var Protocol = exports.Protocol = function Protocol(name) {

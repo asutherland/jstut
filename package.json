@@ -3,5 +3,6 @@
     "main": "narscribblus/main", 
     "name": "narscribblus", 
     "description": "Documentation tool inspired by racket's scribble.",
-    "dependencies": []
+    "dependencies": [],
+    "lib": ["lib", "lib-jetpack"]
 }
