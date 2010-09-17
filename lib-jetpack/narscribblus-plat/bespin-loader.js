@@ -64,5 +64,5 @@ exports.loadBespin = function loadBespin(doc, callback) {
 };
 
 exports.useBespin = function useBespin(doc, name, opts) {
-  doc.defaultView.wrappedJSObject.bespin.useBespin(name, opts);
+  return doc.defaultView.wrappedJSObject.bespin.useBespin(name, opts);
 };

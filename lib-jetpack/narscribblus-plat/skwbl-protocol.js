@@ -46,8 +46,7 @@ var protocol =
   require("narscribblus-plat/opc/about-protocol")
     .register("narscribblus",
               true,
-              self.data.url("chrome-loader.xul"),
-              { jid: packaging.jetpackID });
+              self.data.url("chrome-loader.xul"));
 
 var privblank =
   require("narscribblus-plat/opc/custom-protocol")
