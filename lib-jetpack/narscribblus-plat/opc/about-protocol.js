@@ -39,7 +39,7 @@ const {Cc,Ci,Cr} = require("chrome");
 
 var xpcom = require("xpcom");
 
-function AboutProtocol(name, beSystem, bounceUrl, optArgs) {
+function AboutProtocol(name, beSystem, bounceUrl) {
   memory.track(this);
 
   var self = this;
@@ -80,20 +80,7 @@ function AboutProtocol(name, beSystem, bounceUrl, optArgs) {
     },
     
     newChannel: function newChannel(URI) {
-      var origSpec = URI.spec, newSpec;
-      if (origSpec.indexOf("?") != -1) {
-        newSpec = bounceUrl + origSpec.substring(origSpec.indexOf("?")) + "&";
-      }
-      else {
-        newSpec = bounceUrl + "?";
-      }
-      for (var key in optArgs) {
-        newSpec += encodeURIComponent(key) + "=" +
-                   encodeURIComponent(optArgs[key]) + "&";
-      }
-      newSpec = newSpec.slice(0, -1);
-      
-      var channel = ios.newChannelFromURI(ios.newURI(newSpec, null, null));
+      var channel = ios.newChannelFromURI(ios.newURI(bounceUrl, null, null));
 
       channel.originalURI = URI;
       channel.owner = principal;

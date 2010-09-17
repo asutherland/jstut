@@ -100,7 +100,7 @@ exports.showDoc = function showDoc(aDocPath, document, env, aContents) {
      */
     makeDocLink: function(aDocPath, aCitingPackageName, aOptArgs) {
       aDocPath = aCitingPackageName + "/" + aDocPath;
-      var ls = '?doc=' + encodeURIComponent(aDocPath) + '&jid=' + env.jid;
+      var ls = 'about:narscribblus?doc=' + encodeURIComponent(aDocPath);
       if (aOptArgs) {
         for (var key in aOptArgs) {
           ls += "&" + key + "=" + encodeURIComponent(aOptArgs[key]);
