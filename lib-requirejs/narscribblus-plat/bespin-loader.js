@@ -60,4 +60,9 @@ exports.loadBespin = function loadBespin(doc, callback) {
   head.appendChild(script);
 };
 
+
+exports.useBespin = function useBespin(doc, name, opts) {
+  doc.defaultView.bespin.useBespin(name, opts);
+};
+
 }); // end require.def

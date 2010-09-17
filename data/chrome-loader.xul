@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+<page
+  xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"
+  onload="OnLoad()">
+  <script type="application/javascript;version=1.8"><![CDATA[
+function getEnv() {
+  var env = {};
+
+  var href = window.location.href;
+  var searchPart = href.substring(href.indexOf("?") + 1);
+  var searchBits = searchPart.split("&");
+  for (var i = 0; i < searchBits.length; i++) {
+    var searchBit = searchBits[i];
+    // skip things without a payload.
+    if (searchBit.indexOf("=") <= 0)
+      continue;
+    var pair = searchBit.split("=", 2);
+    var key = decodeURIComponent(pair[0]);
+    var value = decodeURIComponent(pair[1]);
+    env[key] = value;
+  }
+
+  return env;
+};
+
+// Establish a link back to our own jetpack universe.  Our protocol
+//  crams the JID into the query so we can find it.
+var protName = "narscribblus";
+var ourProtoIsh =
+  Components.classes["@mozilla.org/network/protocol/about;1?what=" + protName]
+            .createInstance(Components.interfaces.nsIAboutModule);
+var wrapped = ourProtoIsh.wrappedJSObject;
+var jid = ourProtoIsh.wrappedJSObject.jid;
+
+var env = getEnv();
+var cid = "@mozilla.org/harness-service;1?id=" + jid;
+var jetloader = Components.classes[cid].getService().wrappedJSObject.loader;
+var chromeLoader = jetloader.require("narscribblus-plat/chrome-loader");
+function OnLoad() {
+  chromeLoader.main(document, env);
+}
+  ]]></script>
+  <vbox flex="1">
+    <iframe id="iframe" type="chrome" src="narblank://blank.html/" flex="1">
+    </iframe>
+  </vbox>
+</page>

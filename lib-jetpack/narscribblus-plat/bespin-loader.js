@@ -41,11 +41,11 @@
  **/
 
 var PROTO_NAME = "narbespin";
-var protocol = require("narscribblus/utils/custom-protocol")
+var protocol = require("narscribblus-plat/opc/custom-protocol")
                  .register(PROTO_NAME);
 var self = require("self");
 
-protocol.setHost("files", self.data.url("bespin/"));
+protocol.setHost("files", self.data.url("bespin/"), "system");
 
 exports.loadBespin = function loadBespin(doc, callback) {
   var rawWin = doc.defaultView.wrappedJSObject;
@@ -61,4 +61,8 @@ exports.loadBespin = function loadBespin(doc, callback) {
   var script = doc.createElement("script");
   script.src = PROTO_NAME + "://files/BespinEmbedded.js";
   head.appendChild(script);
+};
+
+exports.useBespin = function useBespin(doc, name, opts) {
+  doc.defaultView.wrappedJSObject.bespin.useBespin(name, opts);
 };

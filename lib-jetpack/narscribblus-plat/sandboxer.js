@@ -47,7 +47,8 @@
 
 var sm = require("securable-module");
 
-exports.makeSandbox = function makeSandbox(code, globals, callback) {
+exports.makeSandbox = function makeSandbox(name, innderDoc,
+                                           code, globals, callback) {
   // let them have our console...
   globals.console = console;
   var loader = new sm.Loader({

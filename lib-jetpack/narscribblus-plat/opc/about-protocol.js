@@ -19,6 +19,7 @@
  *
  * Contributor(s):
  *   Atul Varma <atul@mozilla.com>
+ *   Andrew Sutherland <asutherland@asutherland.org>
  *
  * Alternatively, the contents of this file may be used under the terms of
  * either the GNU General Public License Version 2 or later (the "GPL"), or
@@ -38,14 +39,13 @@ const {Cc,Ci,Cr} = require("chrome");
 
 var xpcom = require("xpcom");
 
-var Protocol = exports.Protocol = function Protocol(name) {
+function AboutProtocol(name, beSystem, bounceUrl, optArgs) {
   memory.track(this);
 
   var self = this;
-  var contractID = "@mozilla.org/network/protocol;1?name=" + name;
+  var contractID = "@mozilla.org/network/protocol/about;1?what=" + name;
   var ios = Cc["@mozilla.org/network/io-service;1"]
             .getService(Ci.nsIIOService);
-  var hosts = {};
 
   try {
     xpcom.getClass(contractID);
@@ -57,83 +57,61 @@ var Protocol = exports.Protocol = function Protocol(name) {
     handler = null;
   };
 
-  self.setHost = function setHost(host, url, principal) {
-    var info = {base: ios.newURI(url, null, null)};
-
-    if (!principal) {
-      var secman = Cc["@mozilla.org/scriptsecuritymanager;1"]
-                   .getService(Ci.nsIScriptSecurityManager);
-
-      principal = secman.getCodebasePrincipal(info.base);
-    } else if (principal == "system") {
-      principal = Cc["@mozilla.org/systemprincipal;1"]
+  var principal;
+  if (beSystem) {
+    principal = Cc["@mozilla.org/systemprincipal;1"]
                   .createInstance(Ci.nsIPrincipal);
-    }
-
-    if (!(principal instanceof Ci.nsIPrincipal))
-      throw new Error("invalid principal: " + principal);
-
-    info.principal = principal;
-    hosts[host] = info;
-  };
-
-  function ProtocolHandler() {
+  }
+  else {
+    var secman = Cc["@mozilla.org/scriptsecuritymanager;1"]
+                   .getService(Ci.nsIScriptSecurityManager);
+    principal = secman.getCodebasePrincipal(ios.newURI(bounceUrl, null, null));
+  }
+  
+  function AboutProtocolHandler() {
     memory.track(this);
+    this.wrappedJSObject = this;
   }
 
-  ProtocolHandler.prototype = {
-    get scheme() {
-      return name;
+  AboutProtocolHandler.prototype = {
+    getURIFlags: function(URI) {
+      return Ci.nsIAboutModule.ALLOW_SCRIPT |
+             Ci.nsIAboutModule.HIDE_FROM_ABOUTABOUT;
     },
-    get protocolFlags() {
-      // For more information on what these flags mean,
-      // see caps/src/nsScriptSecurityManager.cpp.
-      return (Ci.nsIProtocolHandler.URI_STD |
-              Ci.nsIProtocolHandler.URI_IS_LOCAL_RESOURCE |
-              Ci.nsIProtocolHandler.URI_DANGEROUS_TO_LOAD);
-    },
-    get defaultPort() {
-      return -1;
-    },
-    allowPort: function allowPort() {
-      return false;
-    },
-    newURI: function newURI(spec, charset, baseURI) {
-      var uri = Cc["@mozilla.org/network/standard-url;1"]
-                .createInstance(Ci.nsIStandardURL);
-      uri.init(uri.URLTYPE_STANDARD, -1, spec, charset, baseURI);
-      uri.mutable = false;
-      return uri;
-    },
+    
     newChannel: function newChannel(URI) {
-      if (URI.host in hosts) {
-        var resolved;
-        var path = URI.path.slice(1);
-        if (path)
-          resolved = ios.newURI(path, null, hosts[URI.host].base);
-        else
-          resolved = hosts[URI.host].base;
-
-        var channel = ios.newChannelFromURI(resolved);
-
-        channel.originalURI= URI;
-        channel.owner = hosts[URI.host].principal;
-        return channel;
+      var origSpec = URI.spec, newSpec;
+      if (origSpec.indexOf("?") != -1) {
+        newSpec = bounceUrl + origSpec.substring(origSpec.indexOf("?")) + "&";
       }
-      throw Cr.NS_ERROR_FILE_NOT_FOUND;
+      else {
+        newSpec = bounceUrl + "?";
+      }
+      for (var key in optArgs) {
+        newSpec += encodeURIComponent(key) + "=" +
+                   encodeURIComponent(optArgs[key]) + "&";
+      }
+      newSpec = newSpec.slice(0, -1);
+      
+      var channel = ios.newChannelFromURI(ios.newURI(newSpec, null, null));
+
+      channel.originalURI = URI;
+      channel.owner = principal;
+      return channel;
     },
     QueryInterface: xpcom.utils.generateQI([Ci.nsISupports,
                                             Ci.nsISupportsWeakReference,
-                                            Ci.nsIProtocolHandler])
+                                            Ci.nsIAboutModule]),
+    jid: packaging.jetpackID,
   };
 
-  var handler = xpcom.register({name: "Custom Protocol: " + name,
+  var handler = xpcom.register({name: "about:" + name,
                                 contractID: contractID,
-                                create: ProtocolHandler});
+                                create: AboutProtocolHandler});
 
   require("unload").ensure(this);
 };
 
-exports.register = function register(name) {
-  return new Protocol(name);
+exports.register = function register(name, beSystem, bounceUrl, optArgs) {
+  return new AboutProtocol(name, beSystem, bounceUrl);
 };
