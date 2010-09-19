@@ -45,12 +45,14 @@
  *  at things.  (Although that might just imply some sort of bridge...)
  **/
 
-var sm = require("securable-module");
+//var sm = require("securable-module");
+var sm = require("cuddlefish");
 
-exports.makeSandbox = function makeSandbox(name, innderDoc,
+exports.makeSandbox = function makeSandbox(name, innerDoc,
                                            code, globals, callback) {
   // let them have our console...
   globals.console = console;
+  globals.packaging = packaging;
   var loader = new sm.Loader({
     // use the same roots as the root loader...
     rootPaths: packaging.options.rootPaths.slice(),
