@@ -75,8 +75,8 @@ function AboutProtocol(name, beSystem, bounceUrl) {
 
   AboutProtocolHandler.prototype = {
     getURIFlags: function(URI) {
-      return Ci.nsIAboutModule.ALLOW_SCRIPT |
-             Ci.nsIAboutModule.HIDE_FROM_ABOUTABOUT;
+      return Ci.nsIAboutModule.ALLOW_SCRIPT; // |
+             //Ci.nsIAboutModule.HIDE_FROM_ABOUTABOUT;
     },
     
     newChannel: function newChannel(URI) {
