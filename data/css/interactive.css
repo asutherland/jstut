@@ -24,7 +24,9 @@ h1 {
 }
 
 .edcode-editor {
+  display: block;
   overflow: hidden;
+  width: 100%;
   margin: 0;
   padding: 0;
 }
