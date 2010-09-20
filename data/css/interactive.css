@@ -23,6 +23,10 @@ h1 {
   vertical-align: top;
 }
 
+.bespin {
+  overflow: hidden;
+}
+
 .edcode-editor {
   display: block;
   overflow: hidden;
