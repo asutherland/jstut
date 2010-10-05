@@ -57,7 +57,24 @@ require.def("narscribblus-plat/package-info",
   ) {
 
 var config = require.config;
-var dataPaths = config.dataPaths;
+
+function commonLoad(url, promiseName, promiseRef) {
+  var deferred = pwomise.defer(promiseName, promiseRef);
+  var req = new XMLHttpRequest();
+  req.open("GET", url, true);
+  req.addEventListener("load", function() {
+    if (req.status == 200)
+      deferred.resolve(req.responseText);
+    else
+      deferred.reject(req.status);
+  }, false);
+  // We used to disable caching here with Cache-Control.  Instead, we are
+  //  making this the problem of the development web-server to provide us
+  //  with proper cache directives.  Or the client can nuke or otherwise
+  //  disable its cache.
+  req.send(null);
+  return deferred.promise;
+}
 
 /**
  * Returns a promise that provides the source of a given module.
@@ -65,49 +82,31 @@ var dataPaths = config.dataPaths;
 function loadSource(aSourceRef) {
   var deferred = pwomise.defer("load.source", aSourceRef);
   var url = require.nameToUrl(aSourceRef, null);
-  console.log("loadSource", aSourceRef, url);
-  var req = new XMLHttpRequest();
-  req.open("GET", url, true);
-  req.addEventListener("load", function() {
-    if (req.status == 200)
-      deferred.resolve(req.responseText);
-    else
-      deferred.reject(req.status);
-  }, false);
-  // XXX disable caching for dev only
-  //req.setRequestHeader("Cache-Control", "no-cache");
-  req.send(null);
-  return deferred.promise;
+  return commonLoad(url, "load.source", aSourceRef);
 }
 exports.loadSource = loadSource;
+
+function commonPackageLoad(aRef, aDirName) {
+  var refParts = aRef.split("/");
+  var packageName = refParts[0];
+  var relPath = refParts.slice(1).join("/");
+
+  var url = config.baseUrl + packageName + "/" + aDirName + "/" + relPath;
+  return commonLoad(url, "load." + aDirName, aRef);
+}
 
 /**
  * Load a data file from the given package.
  */
 function loadData(aDataRef) {
-  var deferred = pwomise.defer("load.data", aDataRef);
-
-  var refParts = aDataRef.split("/");
-  var packageName = refParts[0];
-  var relPath = refParts.slice(1).join("/");
-
-  var url = config.baseUrl + packageName + "/data/" + relPath;
-  console.log("loadData", aDataRef, url);
-
-  var req = new XMLHttpRequest();
-  req.open("GET", url, true);
-  req.addEventListener("load", function() {
-    if (req.status == 200)
-      deferred.resolve(req.responseText);
-    else
-      deferred.reject(req.status);
-  }, false);
-  // XXX disable caching for dev only
-  //req.setRequestHeader("Cache-Control", "no-cache");
-  req.send(null);
-  return deferred.promise;
+  return commonPackageLoad(aDataRef, "data");
 }
 exports.loadData = loadData;
+
+function loadDoc(aDocRef) {
+  return commonPackageLoad(aDocRef, "docs");  
+}
+exports.loadDoc = loadDoc;
 
 function dataDirUrl(aDataRef) {
   var refParts = aDataRef.split("/");

@@ -38,7 +38,7 @@
 require.def("narscribblus-plat/main",
   [
     "exports",
-    "narscribblus/scribble-loader",
+    "narscribblus/doc-loader",
     "narscribblus-plat/skwbl-protocol",
     "xul-app",
     "self",

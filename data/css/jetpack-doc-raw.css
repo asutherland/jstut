@@ -1,0 +1,17 @@
+.block-markdown {
+  color: #605080;
+  background-color: #dcd8e0;
+  font-family: monospace;
+  white-space: pre;
+}
+
+.block-jetpack-doc {
+  color: #5080b0;
+  background-color: #e0e8f0;
+  font-family: monospace;
+  white-space: pre;
+}
+
+.syntax {
+  margin-top: 0px !important;
+}

@@ -64,14 +64,26 @@ function loadData(aDataRef) {
 }
 exports.loadData = loadData;
 
+function loadDoc(aDocRef) {
+  var refParts = aDataRef.split("/");
+  var packageName = refParts[0];
+  var relPath = refParts.slice(1).join("/");
+
+  // there is no resource for the doc dir, so find the filesystem location of
+  //  the data dir, go up a dir, etc.
+  if (!(packageName in packageData))
+    throw new Error("nothing is known about package " + packageName);
+  var dataDir = url.toFilename(packageData[packageName]);
+  var docPath = file.join(dataDir, '..', 'docs', relPath);
+  return file.read(docPath);
+}
+exports.loadDoc = loadDoc;
+
 function dataDirUrl(aDataRef) {
   var refParts = aDataRef.split("/");
   var packageName = refParts[0];
   var relPath = refParts.slice(1).join("/");
 
-  console.log("package name", packageName, "data", packageData[packageName],
-              "relPath", relPath);
-  console.log("RETURNING", packageData[packageName] + relPath);
   if (packageName in packageData)
     return packageData[packageName] + relPath;
   throw new Error("nothing is known about package " + packageName);

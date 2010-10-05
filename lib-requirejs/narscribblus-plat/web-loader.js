@@ -38,7 +38,7 @@
 require.def("narscribblus-plat/web-loader",
   [
     "exports",
-    "narscribblus/scribble-loader",
+    "narscribblus/doc-loader",
     "narscribblus-plat/package-info",
     "narscribblus/utils/pwomise",
   ],
@@ -72,9 +72,9 @@ function getEnv() {
   return env;
 };
 
-exports.main = function web_loader_teleport_main() {
+exports.main = function web_loader_main() {
   var env = getEnv();
-  if (!("doc" in env) && !("src" in env)) {
+  if (!("doc" in env) && !("src" in env) && !("srcdoc" in env)) {
     var body = document.getElementsByTagName("body")[0];
     body.innerHTML = "I am going to level with you. " +
       "I need you to put the path of the narscribblus doc in the 'doc' " +
@@ -82,30 +82,36 @@ exports.main = function web_loader_teleport_main() {
       "like this one.  <i>Sniff sniff</i>.";
     return;
   }
+  var path;
   if ("doc" in env) {
-    var docPath = env.doc;
-    when(pkginfo.loadData(docPath),
-         exports.showDoc.bind(null, docPath),
-         explodeSadFace);
+    path = env.doc;
+    when(pkginfo.loadData(path),
+         exports.showDoc.bind(null, path),
+         explodeSadFace.bind(null, path));
   }
   else if ("src" in env) {
     var srcPath = env.src;
-    when(pkginfo.loadSource(srcPath),
-         exports.showDoc.bind(null, srcPath),
-         explodeSadFace);
+    when(pkginfo.loadSource(path),
+         exports.showDoc.bind(null, path),
+         explodeSadFace.bind(null, path));
+  }
+  else if ("srcdoc" in env) {
+    path = env.srcdoc;
+    when(pkginfo.loadDoc(path),
+         exports.showDoc.bind(null, path),
+         explodeSadFace.bind(null, path));
   }
 };
 
 function explodeSadFace(aDocPath, aStatusCode) {
-  var env = getEnv();
   var body = document.getElementsByTagName("body")[0];
   if (aStatusCode == 404) {
     body.innerHTML = "We tried to find a document that does not exist: " +
-      env.doc;
+      aDocPath;
   }
   else {
     body.innerHTML = "I couldn't find the document: " +
-      env.doc + "(" + aStatusCode + ")";
+      aDocPath + "(" + aStatusCode + ")";
   }
 }
 
@@ -151,7 +157,7 @@ exports.showDoc = function showDoc(aDocPath, aContents) {
   if ("mode" in env)
     options.mode = env.mode;
 
-  when(loader.parseDocument(aContents, docPath, options),
+  when(loader.parseDocument(aContents, aDocPath, options),
        documentParsed);
 };
 
@@ -171,8 +177,11 @@ function documentParsed(parseOutput) {
   iframe.contentDocument.close();
 
   // propagate the title outwards...
-  document.getElementsByTagName("title")[0].textContent =
-    iframe.contentDocument.getElementsByTagName("title")[0].textContent;
+  var innerDocTitleElem =
+    iframe.contentDocument.getElementsByTagName("title")[0];
+  if (innerDocTitleElem)
+    document.getElementsByTagName("title")[0].textContent =
+        innerDocTitleElem.textContent;
 
   // the body output is supposed to be escaped legal HTML...
   if (parseOutput.liveject)

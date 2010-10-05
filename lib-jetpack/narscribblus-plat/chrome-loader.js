@@ -38,7 +38,7 @@
 require.def("narscribblus-plat/chrome-loader",
   [
     "exports",
-    "narscribblus/scribble-loader",
+    "narscribblus/doc-loader",
     "narscribblus-plat/package-info",
     "narscribblus/utils/pwomise",
   ],

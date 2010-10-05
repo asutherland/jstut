@@ -36,7 +36,7 @@
  * ***** END LICENSE BLOCK ***** */
 
 var syn = require("narscribblus/readers/scribble-syntax");
-var loader = require("narscribblus/scribble-loader");
+var loader = require("narscribblus/doc-loader");
 
 var js_simpleFunc = "function foo() {}";
 var js_funcWithRegex = "function foo() {var v = /\}\{/;}";

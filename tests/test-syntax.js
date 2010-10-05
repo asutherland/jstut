@@ -40,7 +40,7 @@
  **/
 
 var syn = require("narscribblus/readers/scribble-syntax");
-var loader = require("narscribblus/scribble-loader");
+var loader = require("narscribblus/doc-loader");
 
 var ALT_SYNTAX_MIRROR_EXPECTATIONS = [
   ["|{", "}|"],
