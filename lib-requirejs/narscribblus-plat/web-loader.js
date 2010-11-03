@@ -90,7 +90,7 @@ exports.main = function web_loader_main() {
          explodeSadFace.bind(null, path));
   }
   else if ("src" in env) {
-    var srcPath = env.src;
+    path = env.src;
     when(pkginfo.loadSource(path),
          exports.showDoc.bind(null, path),
          explodeSadFace.bind(null, path));
