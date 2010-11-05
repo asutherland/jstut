@@ -38,12 +38,14 @@
 require.def("narscribblus-plat/web-loader",
   [
     "exports",
+    "require",
     "narscribblus/doc-loader",
     "narscribblus-plat/package-info",
     "narscribblus/utils/pwomise",
   ],
   function (
     exports,
+    require,
     loader,
     pkginfo,
     pwomise
@@ -158,11 +160,22 @@ exports.showDoc = function showDoc(aDocPath, aContents) {
     options.mode = env.mode;
 
   when(loader.parseDocument(aContents, aDocPath, options),
-       documentParsed);
+       function(parsed) {
+         if (!("app" in parsed) || parsed.app == "html")
+           documentParsed(parsed);
+         if (parsed.app == "browse") {
+           require(["narscribblus/present/app-browse"], function(app) {
+             app.showDoc(parsed, document);
+           });
+         }
+       });
 };
 
-function documentParsed(parseOutput) {
+function showOldSchoolIFrame(parseOutput) {
   var body = document.getElementsByTagName("body")[0];
+  body.setAttribute(
+    "style",
+    "height: 100%; padding: 0; margin: 0; border: 0; overflow: none;");
 
   // create an iframe to hold the document we built.
   var iframe = document.createElement("iframe");
