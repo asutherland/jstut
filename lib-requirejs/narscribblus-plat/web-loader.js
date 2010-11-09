@@ -162,7 +162,7 @@ exports.showDoc = function showDoc(aDocPath, aContents) {
   when(loader.parseDocument(aContents, aDocPath, options),
        function(parsed) {
          if (!("app" in parsed) || parsed.app == "html")
-           documentParsed(parsed);
+           showOldSchoolIFrame(parsed);
          if (parsed.app == "browse") {
            require(["narscribblus/present/app-browse"], function(app) {
              app.showDoc(parsed, document);
