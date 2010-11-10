@@ -74,7 +74,10 @@ function getEnv() {
   return env;
 };
 
-exports.main = function web_loader_main() {
+var gPackageBaseRelPath;
+
+exports.main = function web_loader_main(relPath) {
+  gPackageBaseRelPath = relPath;
   var env = getEnv();
   if (!("doc" in env) && !("src" in env) && !("srcdoc" in env)) {
     var body = document.getElementsByTagName("body")[0];
@@ -165,7 +168,7 @@ exports.showDoc = function showDoc(aDocPath, aContents) {
            showOldSchoolIFrame(parsed);
          if (parsed.app == "browse") {
            require(["narscribblus/present/app-browse"], function(app) {
-             app.showDoc(parsed, document);
+             app.showDoc(parsed, document, gPackageBaseRelPath);
            });
          }
        });
