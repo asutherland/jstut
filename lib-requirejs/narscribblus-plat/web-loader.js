@@ -166,11 +166,22 @@ exports.showDoc = function showDoc(aDocPath, aContents) {
        function(parsed) {
          if (!("app" in parsed) || parsed.app == "html")
            showOldSchoolIFrame(parsed);
-         if (parsed.app == "browse") {
-           require(["narscribblus/present/app-browse"], function(app) {
-             app.showDoc(parsed, document, gPackageBaseRelPath);
-           });
+
+         var appModule;
+         switch (parsed.app) {
+           case "browse":
+             appModule = "narscribblus/present/app-browse";
+             break;
+           case "doc":
+             appModule = "narscribblus/present/app-doc";
+             break;
+           default:
+             throw new Error("unrecognized app code: " + parsed.app);
          }
+
+         require([appModule], function(app) {
+           app.showDoc(parsed, document, gPackageBaseRelPath);
+         });
        });
 };
 
