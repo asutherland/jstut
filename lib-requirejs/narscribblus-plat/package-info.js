@@ -94,6 +94,7 @@ function commonPackageLoad(aRef, aDirName) {
   var url = config.baseUrl + packageName + "/" + aDirName + "/" + relPath;
   return commonLoad(url, "load." + aDirName, aRef);
 }
+exports.loadAnything = commonPackageLoad;
 
 /**
  * Load a data file from the given package.
@@ -104,7 +105,7 @@ function loadData(aDataRef) {
 exports.loadData = loadData;
 
 function loadDoc(aDocRef) {
-  return commonPackageLoad(aDocRef, "docs");  
+  return commonPackageLoad(aDocRef, "docs");
 }
 exports.loadDoc = loadDoc;
 

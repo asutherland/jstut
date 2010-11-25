@@ -41,6 +41,7 @@ require.def("narscribblus-plat/web-loader",
     "require",
     "narscribblus/doc-loader",
     "narscribblus-plat/package-info",
+    "narscribblus-plat/utils/env",
     "narscribblus/utils/pwomise",
   ],
   function (
@@ -48,37 +49,17 @@ require.def("narscribblus-plat/web-loader",
     require,
     loader,
     pkginfo,
+    $env,
     pwomise
   ) {
 
 var when = pwomise.when;
 
-/**
- * Explode window.location.search into a dictionary.
- */
-function getEnv() {
-  var env = {};
-
-  var searchBits = window.location.search.substring(1).split("&");
-  for (var i = 0; i < searchBits.length; i++) {
-    var searchBit = searchBits[i];
-    // skip things without a payload.
-    if (searchBit.indexOf("=") <= 0)
-      continue;
-    var pair = searchBit.split("=", 2);
-    var key = decodeURIComponent(pair[0]);
-    var value = decodeURIComponent(pair[1]);
-    env[key] = value;
-  }
-
-  return env;
-};
-
 var gPackageBaseRelPath;
 
 exports.main = function web_loader_main(relPath) {
   gPackageBaseRelPath = relPath;
-  var env = getEnv();
+  var env = $env.getEnv();
   if (!("doc" in env) && !("src" in env) && !("srcdoc" in env)) {
     var body = document.getElementsByTagName("body")[0];
     body.innerHTML = "I am going to level with you. " +
@@ -128,7 +109,7 @@ function explodeSadFace(aDocPath, aStatusCode) {
  *  live in.
  */
 exports.showDoc = function showDoc(aDocPath, aContents) {
-  var env = getEnv();
+  var env = $env.getEnv();
   var options = {
     /**
      * Link to a specific document.

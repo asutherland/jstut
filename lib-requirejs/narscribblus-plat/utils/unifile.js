@@ -109,7 +109,7 @@ function webList(aPath) {
   return deferred.promise;
 }
 
-RE_HTTP = /^http[s]?:\/\//;
+var RE_HTTP = /^http[s]?:\/\//;
 
 function LocalFile(aFullPath) {
 }
