@@ -1,0 +1,11 @@
+jstut esther => jstu testher => jstu tester
+
+This is a test running framework that exists to let me run my jetpack-targeted
+tests in the browser as well as via straight-up jetpack.  This is not meant to
+be a testing framework that anyone else adopts.  Ideally it's just the jetpack
+test runner adapted for asynchronous module definitions, support for overkill
+logging, plus test duration logging.
+
+This is co-located in jstut rather than on its own so that we can leverage
+jstut's package-related code and maybe some ability to resolve exceptions to
+the source code in a magical fashion at some point in the future.
