@@ -16,21 +16,25 @@
         console.log(aMsgWithNewline.replace("\n", "", "g"));
       }
     </script>
-    <script type="text/javascript" src="../../../requirejs/require.js"></script>
+    <script type="text/javascript" src="../../requirejs/require.js"></script>
     <script>
       require(
         {
-          baseUrl: "../../../",
+          baseUrl: "../../",
           paths: {
+            "jstut": "narscribblus/lib/jstut",
             "narscribblus": "narscribblus/lib/narscribblus",
             "narscribblus-plat": "narscribblus/lib-requirejs/narscribblus-plat",
             "requirejs": "requirejs/build/convert/commonjs",
             "wmsy": "wmsy/lib/wmsy",
+            "wmsy-plat": "wmsy/lib-requirejs/wmsy-plat",
+            // XXX these should get automatically poked in automatically
+            "wmsy-tests": "wmsy/tests",
           },
         },
-        ["requirejs/global-es5", "wmsy/examples/testresults-show"],
+        ["requirejs/global-es5", "jstut/esther/testrunner-main"],
         function(es5, mainModule) {
-          mainModule.main();
+          mainModule.main(document);
         }
       );
     </script>

@@ -119,4 +119,10 @@ function dataDirUrl(aDataRef) {
 }
 exports.dataDirUrl = dataDirUrl;
 
+function packageUrl(packageName, relPath) {
+  return config.baseUrl + packageName + "/" + (relPath ? relPath : "");
+}
+exports.packageUrl = packageUrl;
+
+
 }); // end require.def

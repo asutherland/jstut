@@ -91,7 +91,7 @@ exports.testCakeSimple = function(test) {
     var eggs = defer("eggs");
     enqueue(function() { eggs.resolve("eggs"); });
 
-    return pwomise.all([milk.promise, eggs.promise], "ingredients");
+    return pwomise.all([milk.promise, eggs.promise], null, "ingredients");
   }
 
   function mix(ingredients) {
