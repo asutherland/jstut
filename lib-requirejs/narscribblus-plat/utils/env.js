@@ -64,4 +64,12 @@ exports.getEnv = function getEnv() {
   return env;
 };
 
+exports.buildSearchSpec = function buildSearchSpec(args) {
+  var bits = [];
+  for (var key in args) {
+    bits.push(encodeURIComponent(key) + "=" + encodeURIComponent(args[key]));
+  }
+  return bits.join("&");
+};
+
 });
