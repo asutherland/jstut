@@ -35,6 +35,12 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
+/**
+ * Web document loader; gets the document text, feeds it along to the doc-loader
+ *  to process then fires up the proper "app" to render the output.  A lot of
+ *  this is now less tied to web display and should be refactored out.
+ **/
+
 require.def("narscribblus-plat/web-loader",
   [
     "exports",
@@ -102,36 +108,30 @@ function explodeSadFace(aDocPath, aStatusCode) {
 }
 
 /**
+ * Wrap a call to the document loader with some minor configuration setup
+ *  (before) and dynamic loading of the appropriate application (after).
+ *  
+ *
  * Compare and constrast with main.js' showWhereYouCan and skbwl-protocol.js'
  *  makeDocURI.
  *
  * If we successfully retrieve the document then we create an iframe for it to
  *  live in.
+ *
+ * @args[
+ *   @param[aDocPath String]{
+ *     The friendly description of the path.  It's hiding the fact that you also
+ *     need to know whether doc (loadData), src (loadSource), or srcdoc
+ *     (loadDoc) was used, since those also perform transforms on the path.
+ *   }
+ *   @param[aContents String]{
+ *     The text that makes up the document.
+ *   }
+ * ]
  */
 exports.showDoc = function showDoc(aDocPath, aContents) {
   var env = $env.getEnv();
   var options = {
-    /**
-     * Link to a specific document.
-     */
-    makeDocLink: function(aDocPath, aCitingPackageName, aOptArgs) {
-      aDocPath = aCitingPackageName + "/" + aDocPath;
-      var ls = '?doc=' + encodeURIComponent(aDocPath);
-      if (aOptArgs) {
-        for (var key in aOptArgs) {
-          ls += "&" + key + "=" + encodeURIComponent(aOptArgs[key]);
-        }
-      }
-      return ' href="' + ls + '" target="_parent"';
-    },
-    /**
-     * Link to something in the type/symish hierarchy.  This is probably just
-     *  for open in new tab purposes; in-frame popups are handled elsewhere.
-     */
-    makeTypeishLink: function(docInfo) {
-      // XXX punt until after we've got the popup stuff working.
-      return "";
-    },
   };
   var docPath = env.doc;
   if ("src" in env) {
@@ -145,8 +145,10 @@ exports.showDoc = function showDoc(aDocPath, aContents) {
 
   when(loader.parseDocument(aContents, aDocPath, options),
        function(parsed) {
-         if (!("app" in parsed) || parsed.app == "html")
+         if (!("app" in parsed) || parsed.app == "html") {
            showOldSchoolIFrame(parsed);
+           return;
+         }
 
          var appModule;
          switch (parsed.app) {
