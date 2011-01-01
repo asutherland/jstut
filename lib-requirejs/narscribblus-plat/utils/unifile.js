@@ -77,9 +77,9 @@ WebFile.prototype = {
  * It would be neat to support other things in the future, but it's not a
  *  concern right now.
  */
-function webList(aPath) {
+function webList(aPath, XHRImpl) {
   var deferred = pwomise.defer("webList", aPath);
-  var req = new XMLHttpRequest();
+  var req = new (XHRImpl || XMLHttpRequest)();
   req.open("GET", aPath, true);
   req.addEventListener("load", function() {
     if (req.status != 200) {
@@ -123,9 +123,9 @@ exports.normFile = function(aPathy) {
 
 };
 
-exports.list = function(aPath) {
+exports.list = function(aPath, XHRImpl) {
   //if (RE_HTTP.test(aPath)) {
-    return webList(aPath);
+    return webList(aPath, XHRImpl);
   //}
   //return file.list(aPath);
 };

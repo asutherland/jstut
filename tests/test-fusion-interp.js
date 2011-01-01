@@ -42,9 +42,20 @@
  *  (require.def) case.
  **/
 
-var docFusion = require("narscribblus/docfusion").docFusion;
-var pwomise = require("narscribblus/utils/pwomise");
-var when = pwomise.when;
+require.def("narscribblus-tests/test-fusion-interp",
+  [
+    "narscribblus/docfusion",
+    "narscribblus/utils/pwomise",
+    "exports"
+  ],
+  function(
+    $docfusion,
+    $pwomise,
+    exports
+  ) {
+
+var docFusion = $docfusion.docFusion;
+var when = $pwomise.when;
 
 var TEST_PACKAGE = "narscribblus/testfodder";
 
@@ -112,3 +123,5 @@ exports.testInterpAsyncRequiresOther = function(test) {
   test.waitUntilDone();
   when(docFusion.requireModule(ASYNC_TWO), checkTwo.bind({}, test));
 };
+
+}); // end require.def

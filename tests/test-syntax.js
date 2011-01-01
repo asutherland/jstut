@@ -39,8 +39,17 @@
  * Test scribble syntax parsing fundamentals.
  **/
 
-var syn = require("narscribblus/readers/scribble-syntax");
-var loader = require("narscribblus/doc-loader");
+require.def("narscribblus-tests/test-syntax",
+  [
+    "narscribblus/readers/scribble-syntax",
+    "narscribblus/doc-loader",
+    "exports"
+  ],
+  function(
+    syn,
+    loader,
+    exports
+  ) {
 
 var ALT_SYNTAX_MIRROR_EXPECTATIONS = [
   ["|{", "}|"],
@@ -254,3 +263,5 @@ exports.atBreaker = function(test) {
                      "Test string: '" + testString + "' failure.");
   }
 };
+
+}); // end require.def

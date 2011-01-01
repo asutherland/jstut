@@ -35,8 +35,17 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-var syn = require("narscribblus/readers/scribble-syntax");
-var loader = require("narscribblus/doc-loader");
+require.def("narscribblus-tests/test-syntax-js",
+  [
+    "narscribblus/readers/scribble-syntax",
+    "narscribblus/doc-loader",
+    "exports"
+  ],
+  function(
+    syn,
+    loader,
+    exports
+  ) {
 
 var js_simpleFunc = "function foo() {}";
 var js_funcWithRegex = "function foo() {var v = /\}\{/;}";
@@ -105,3 +114,5 @@ exports.testJsBreaking = function(test) {
                      "Test string: '" + testString + "' failure.");
   }
 };
+
+}); // end require.def

@@ -35,6 +35,18 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
+require.def("narscribblus-tests/test-utils-unifile",
+  [
+    "narscribblus/utils/pwomise",
+    "narscribblus-plat/utils/unifile",
+    "exports"
+  ],
+  function(
+    pwomise,
+    unifile,
+    exports
+  ) {
+
 var FAKE_RESULT =
   '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">\n' +
   '<html> \n' +
@@ -83,24 +95,11 @@ var mockXHR_prototype = {
   },
 };
 
-var pwomise = require("narscribblus/utils/pwomise");
-
 /**
  * Test the list by making a fake xhr that just returns that thing up there.
  */
 exports.testWebList = function(test) {
-  var loader = test.makeSandboxedLoader({
-    moduleOverrides: {
-      xhr: {
-        XMLHttpRequest: mockXHR(FAKE_RESULT),
-      },
-      // needs to use the same promise universe
-      "narscribblus/utils/pwomise": pwomise,
-    },
-  });
-  var listPromise = loader
-    .require("narscribblus-plat/utils/unifile")
-    .list("http://banana.banana/");
+  var listPromise = unifile.list("http://banana.banana/", mockXHR(FAKE_RESULT));
   pwomise.when(listPromise, function(items) {
     test.assertEqual(items.toString(), EXPECTED_RESULT.toString());
     test.done();
@@ -108,3 +107,4 @@ exports.testWebList = function(test) {
   test.waitUntilDone(100);
 };
 
+}); // end require.def

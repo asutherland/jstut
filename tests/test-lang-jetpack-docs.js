@@ -35,7 +35,16 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-var jd = require("narscribblus/langs/jetpack-docs");
+require.def("narscribblus-tests/test-lang-jetpack-docs",
+  [
+    "narscribblus/langs/jetpack-docs",
+    "exports"
+  ],
+  function(
+    jd,
+    exports
+  ) {
+
 
 var BLOCK_PARSE_EXPECTATIONS = [
   {
@@ -229,3 +238,5 @@ exports.testBlockParser = function(test) {
     test.assertEqual(JSON.stringify(typish), JSON.stringify(expecty.typedump));
   }
 };
+
+}); // end require.def

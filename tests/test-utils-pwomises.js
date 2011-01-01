@@ -35,7 +35,16 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-var pwomise = require("narscribblus/utils/pwomise");
+require.def("narscribblus-tests/test-utils-pwomises",
+  [
+    "narscribblus/utils/pwomise",
+    "exports"
+  ],
+  function(
+    pwomise,
+    exports
+  ) {
+
 var when = pwomise.when, defer = pwomise.defer, forward = pwomise.forward,
     enqueue = pwomise.enqueue;
 
@@ -150,3 +159,5 @@ exports.testCakeSimple = function(test) {
     test.done();
   });
 };
+
+}); // end require.def
