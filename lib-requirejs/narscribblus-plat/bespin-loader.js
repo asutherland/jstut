@@ -35,7 +35,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-require.def("narscribblus-plat/bespin-loader",
+define("narscribblus-plat/bespin-loader",
   [
     "exports",
     "narscribblus-plat/package-info"
@@ -65,4 +65,4 @@ exports.useBespin = function useBespin(doc, name, opts) {
   return doc.defaultView.bespin.useBespin(name, opts);
 };
 
-}); // end require.def
+}); // end define

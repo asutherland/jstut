@@ -44,7 +44,7 @@
  * All public documentation lives in package-info.js.
  **/
 
-require.def("narscribblus-plat/package-info",
+define("narscribblus-plat/package-info",
   [
     "exports",
     "require",
@@ -125,4 +125,4 @@ function packageUrl(packageName, relPath) {
 exports.packageUrl = packageUrl;
 
 
-}); // end require.def
+}); // end define

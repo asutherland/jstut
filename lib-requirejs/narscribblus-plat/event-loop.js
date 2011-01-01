@@ -1,4 +1,4 @@
-require.def("narscribblus-plat/event-loop",
+define("narscribblus-plat/event-loop",
   [
     "exports",
   ],
@@ -10,4 +10,4 @@ exports.enqueue = function(task) {
   setTimeout(task, 0);
 };
 
-}); // end require.def
+}); // end define

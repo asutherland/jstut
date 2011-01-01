@@ -40,7 +40,7 @@
  *  directories and get their contents.
  **/
 
-require.def("narscribblus-plat/utils/unifile",
+define("narscribblus-plat/utils/unifile",
   [
     "exports",
     "narscribblus/utils/pwomise",
@@ -143,4 +143,4 @@ exports.listMatchingDescendants = function(aPath) {
 
 };
 
-}); // end require.def
+}); // end define

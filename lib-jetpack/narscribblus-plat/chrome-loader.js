@@ -35,7 +35,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-require.def("narscribblus-plat/chrome-loader",
+define("narscribblus-plat/chrome-loader",
   [
     "exports",
     "narscribblus/doc-loader",
@@ -136,9 +136,9 @@ function documentParsed(document, parseOutput) {
     // create an iframe to hold the document we built.
     var iframe = document.getElementById("iframe");
 
-    
+
     //console.log("BODY", parseOutput.body);
-    
+
 
     var allstr = parseOutput.body;
     var headBit = allstr.substring(allstr.indexOf("<head>"),
@@ -146,11 +146,11 @@ function documentParsed(document, parseOutput) {
                                      ("</head>").length);
     var bodyBit = allstr.substring(allstr.indexOf("<body>"),
                                    allstr.length - 8);
-    
+
     iframe.contentDocument.getElementsByTagName("head")[0].innerHTML =
       headBit;
     iframe.contentDocument.getElementsByTagName("body")[0].innerHTML = bodyBit;
-    
+
     console.log("propagating title");
     // propagate the title outwards...
     //document.getElementsByTagName("title")[0].textContent =
@@ -166,4 +166,4 @@ function documentParsed(document, parseOutput) {
 };
 
 
-}); // end require.def
+}); // end define

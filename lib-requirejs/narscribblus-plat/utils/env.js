@@ -35,7 +35,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-require.def("narscribblus-plat/utils/env",
+define("narscribblus-plat/utils/env",
   [
     "exports"
   ],

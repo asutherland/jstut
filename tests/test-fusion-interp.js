@@ -39,10 +39,10 @@
  * Test that the abstract interpretation works, assigning doc blocks
  *  appropriately and propagating things across module boundaries correctly.
  *  We check each thing once for the synchronous case and once for the async
- *  (require.def) case.
+ *  (define) case.
  **/
 
-require.def("narscribblus-tests/test-fusion-interp",
+define("narscribblus-tests/test-fusion-interp",
   [
     "narscribblus/docfusion",
     "narscribblus/utils/pwomise",
@@ -124,4 +124,4 @@ exports.testInterpAsyncRequiresOther = function(test) {
   when(docFusion.requireModule(ASYNC_TWO), checkTwo.bind({}, test));
 };
 
-}); // end require.def
+}); // end define

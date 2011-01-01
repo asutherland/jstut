@@ -3,7 +3,7 @@
  *  setTimeout when operating under teleport.
  **/
 
-require.def("narscribblus-plat/event-loop",
+define("narscribblus-plat/event-loop",
   [
     "exports",
     "timer",

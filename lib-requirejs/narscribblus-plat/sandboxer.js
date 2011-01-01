@@ -35,7 +35,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-require.def("narscribblus-plat/sandboxer",
+define("narscribblus-plat/sandboxer",
   [
     "exports",
   ],
@@ -134,4 +134,4 @@ exports.makeSandbox = function makeSandbox(name, innerDoc,
   outerDoc.getElementsByTagName("head")[0].appendChild(scriptElem);
 };
 
-}); // end require.def
+}); // end define

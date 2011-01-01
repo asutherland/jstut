@@ -35,7 +35,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-require.def("narscribblus-plat/main",
+define("narscribblus-plat/main",
   [
     "exports",
     "narscribblus/doc-loader",
@@ -112,4 +112,4 @@ exports.main = function geckgrok_main(options, callbacks) {
   return callbacks.quit("FAIL");
 };
 
-}); // end require.def
+}); // end define

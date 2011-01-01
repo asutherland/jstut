@@ -35,7 +35,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-require.def("narscribblus-tests/test-utils-pwomises",
+define("narscribblus-tests/test-utils-pwomises",
   [
     "narscribblus/utils/pwomise",
     "exports"
@@ -160,4 +160,4 @@ exports.testCakeSimple = function(test) {
   });
 };
 
-}); // end require.def
+}); // end define

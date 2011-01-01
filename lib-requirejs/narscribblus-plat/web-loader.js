@@ -41,7 +41,7 @@
  *  this is now less tied to web display and should be refactored out.
  **/
 
-require.def("narscribblus-plat/web-loader",
+define("narscribblus-plat/web-loader",
   [
     "exports",
     "require",
@@ -110,7 +110,7 @@ function explodeSadFace(aDocPath, aStatusCode) {
 /**
  * Wrap a call to the document loader with some minor configuration setup
  *  (before) and dynamic loading of the appropriate application (after).
- *  
+ *
  *
  * Compare and constrast with main.js' showWhereYouCan and skbwl-protocol.js'
  *  makeDocURI.
@@ -199,4 +199,4 @@ function showOldSchoolIFrame(parseOutput) {
 };
 
 
-}); // end require.def
+}); // end define

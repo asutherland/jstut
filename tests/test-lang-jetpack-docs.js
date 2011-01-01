@@ -35,7 +35,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-require.def("narscribblus-tests/test-lang-jetpack-docs",
+define("narscribblus-tests/test-lang-jetpack-docs",
   [
     "narscribblus/langs/jetpack-docs",
     "exports"
@@ -239,4 +239,4 @@ exports.testBlockParser = function(test) {
   }
 };
 
-}); // end require.def
+}); // end define

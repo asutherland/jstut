@@ -35,7 +35,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-require.def("narscribblus-tests/test-utils-unifile",
+define("narscribblus-tests/test-utils-unifile",
   [
     "narscribblus/utils/pwomise",
     "narscribblus-plat/utils/unifile",
@@ -107,4 +107,4 @@ exports.testWebList = function(test) {
   test.waitUntilDone(100);
 };
 
-}); // end require.def
+}); // end define

@@ -39,7 +39,7 @@
  * Test scribble syntax parsing fundamentals.
  **/
 
-require.def("narscribblus-tests/test-syntax",
+define("narscribblus-tests/test-syntax",
   [
     "narscribblus/readers/scribble-syntax",
     "narscribblus/doc-loader",
@@ -264,4 +264,4 @@ exports.atBreaker = function(test) {
   }
 };
 
-}); // end require.def
+}); // end define

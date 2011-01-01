@@ -35,7 +35,7 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-require.def("narscribblus-tests/test-syntax-js",
+define("narscribblus-tests/test-syntax-js",
   [
     "narscribblus/readers/scribble-syntax",
     "narscribblus/doc-loader",
@@ -115,4 +115,4 @@ exports.testJsBreaking = function(test) {
   }
 };
 
-}); // end require.def
+}); // end define
