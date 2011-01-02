@@ -47,16 +47,16 @@
 define("narscribblus-plat/package-info",
   [
     "exports",
-    "require",
+    //"require", // we need to get access to the global require for 'config'
     "narscribblus/utils/pwomise",
   ],
   function(
     exports,
-    require,
+    //require,
     pwomise
   ) {
 
-var config = require.config;
+var config = require.s.contexts._.config;
 
 function commonLoad(url, promiseName, promiseRef) {
   var deferred = pwomise.defer(promiseName, promiseRef);
