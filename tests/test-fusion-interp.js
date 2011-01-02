@@ -66,6 +66,9 @@ var ASYNC_ONE = TEST_PACKAGE + "/async_one";
 var ASYNC_TWO = TEST_PACKAGE + "/async_two";
 
 
+/**
+ * Check if the docStream on `thing` contains the string `s`.
+ */
 function docStreamContains(thing, s) {
   function traverseStream(arr) {
     for (var i = 0; i < arr.length; i++) {
