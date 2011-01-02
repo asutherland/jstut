@@ -47,12 +47,12 @@
 define("narscribblus-plat/package-info",
   [
     "exports",
-    //"require", // we need to get access to the global require for 'config'
+    "require",
     "narscribblus/utils/pwomise",
   ],
   function(
     exports,
-    //require,
+    localRequire, // don't shadow the global require; we need baseUrl
     pwomise
   ) {
 
@@ -81,7 +81,7 @@ function commonLoad(url, promiseName, promiseRef) {
  */
 function loadSource(aSourceRef) {
   var deferred = pwomise.defer("load.source", aSourceRef);
-  var url = require.nameToUrl(aSourceRef, null);
+  var url = localRequire.nameToUrl(aSourceRef, null);
   return commonLoad(url, "load.source", aSourceRef);
 }
 exports.loadSource = loadSource;

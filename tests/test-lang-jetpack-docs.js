@@ -37,7 +37,7 @@
 
 define("narscribblus-tests/test-lang-jetpack-docs",
   [
-    "narscribblus/langs/jetpack-docs",
+    "narscribblus/langs/jetpack-doc",
     "exports"
   ],
   function(
@@ -149,7 +149,7 @@ var BLOCK_PARSE_EXPECTATIONS = [
             },
           },
           {
-            name: bob,
+            name: "bob",
             optional: false,
             type: {
               kind: "oneof",
@@ -160,7 +160,7 @@ var BLOCK_PARSE_EXPECTATIONS = [
             }
           },
           {
-            name: cat,
+            name: "cat",
             optional: true,
             default: "dog",
             type: "String",

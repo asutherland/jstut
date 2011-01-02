@@ -66,8 +66,24 @@ var ASYNC_ONE = TEST_PACKAGE + "/async_one";
 var ASYNC_TWO = TEST_PACKAGE + "/async_two";
 
 
-function docNodeContains(docNode, s) {
-  return docNode.toHTMLString({}).indexOf(s) >= 0;
+function docStreamContains(thing, s) {
+  function traverseStream(arr) {
+    for (var i = 0; i < arr.length; i++) {
+      if (typeof(arr[i]) === "string") {
+        if (arr[i].indexOf(s) >= 0)
+          return true;
+      }
+      else if ((typeof(arr[i]) === "object") &&
+               ("kids" in arr[i])) {
+        if (traverseStream(arr[i].kids))
+          return true;
+      }
+    }
+    return false;
+  }
+  if (!thing.docStream)
+    return false;
+  return traverseStream(thing.docStream);
 }
 
 function checkOne(test, minfo) {
@@ -78,18 +94,18 @@ function checkOne(test, minfo) {
               "tlObjAsSingleton in export namespace");
   var singly = exportNS.childrenByName.tlObjAsSingleton;
   // should have proper doc node with the right contents
-  test.assert(singly.docNode != null, "non-null docNode");
-  test.assert(docNodeContains(singly.docNode, "AAAA"), "docnode contents");
+  test.assert(singly.docStream != null, "non-null docStream");
+  test.assert(docStreamContains(singly, "AAAA"), "docStream contents");
+  // sanity check docStreamContains with a known false case
+  test.assert(!docStreamContains(singly, "ZZZZ"), "should fail to find");
 
   test.assert("methVoidVoid" in singly.childrenByName);
-  test.assert(singly.childrenByName.methVoidVoid.docNode != null);
-  test.assert(docNodeContains(singly.childrenByName.methVoidVoid,
-                              "AAAB"));
+  test.assert(docStreamContains(singly.childrenByName.methVoidVoid,
+                                "AAAB"));
 
   test.assert("methIntInt" in singly.childrenByName);
-  test.assert(singly.childrenByName.methIntInt.docNode != null);
-  test.assert(docNodeContains(singly.childrenByName.methIntInt,
-                              "AAAC"));
+  test.assert(docStreamContains(singly.childrenByName.methIntInt,
+                                "AAAC"));
 
   test.done();
 }
