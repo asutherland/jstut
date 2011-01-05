@@ -80,7 +80,6 @@ function commonLoad(url, promiseName, promiseRef) {
  * Returns a promise that provides the source of a given module.
  */
 function loadSource(aSourceRef) {
-  var deferred = pwomise.defer("load.source", aSourceRef);
   var url = localRequire.nameToUrl(aSourceRef, null);
   return commonLoad(url, "load.source", aSourceRef);
 }
