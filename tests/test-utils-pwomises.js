@@ -49,18 +49,27 @@ var when = pwomise.when, defer = pwomise.defer, forward = pwomise.forward,
     enqueue = pwomise.enqueue;
 
 /**
+ * Build a tree representation of the promises.
  *
+ * @typedef[PromiseTreeNode @dict[
+ *   @key[name String]{
+ *     What was promised.
+ *   }
+ *   @key[kids @listof[PromiseTreeNode]]
+ * ]]
+ *
+ * @return[PromiseTreeNode]
  */
-function treeifyPromise(p, containingList) {
+function treeifyPromise(p) {
   if ("betterPromise" in p)
     p = p.betterPromise;
 
   // build the node that describes us
   var self;
-  if ("subPromised" in p) {
+  if ("promiseDeps" in p) {
     self = {name: p.what, kids: []};
-    for (var i = 0; i < p.subPromised.length; i++) {
-      var kid = treeifyPromise(p.subPromised[i]);
+    for (var i = 0; i < p.promiseDeps.length; i++) {
+      var kid = treeifyPromise(p.promiseDeps[i]);
       if (kid.length == 1)
         kid = kid[0];
       self.kids.push(kid);
@@ -70,15 +79,7 @@ function treeifyPromise(p, containingList) {
     self = p.what;
   }
 
-  // if we are part of a chain, perform a tail recursive back traversal...
-  if (!containingList)
-    containingList = [self];
-  else
-    containingList.unshift(self);
-
-  if ("prevPromise" in p)
-    return treeifyPromise(p.prevPromise, containingList);
-  return containingList;
+  return self;
 }
 
 exports.testCakeSimple = function(test) {
@@ -134,25 +135,35 @@ exports.testCakeSimple = function(test) {
   var cakeDone = makeCake(true);
   when(cakeDone, function() {
     var ptree = treeifyPromise(cakeDone);
-    var expectedTree = {"tree": [
+    var expectedTree = {"tree":
       {
         "name": "cake",
-        "kids": [ // parallel run of...
-          [ // serial run...
-            {
-              "name": "ingredients",
-              "kids": [ // parallel run of...
-                "milk",
-                "eggs"
-              ]
-            },
-            "mix",
-            "bake",
-            "auto:ice"
-          ]
+        "kids": [
+          {
+            name: "auto:ice",
+            kids: [
+              {
+                name: "bake",
+                kids: [
+                  {
+                    name: "mix",
+                    kids: [
+                      {
+                        "name": "ingredients",
+                        "kids": [ // parallel run of...
+                          "milk",
+                          "eggs"
+                        ]
+                      },
+                    ]
+                  },
+                ]
+              }
+            ],
+          },
         ]
       }
-    ]};
+    };
     test.assertEqual(JSON.stringify({tree: ptree}),
                      JSON.stringify(expectedTree),
                      "resulting tree structure");

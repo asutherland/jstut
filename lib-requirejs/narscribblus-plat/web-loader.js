@@ -143,8 +143,9 @@ exports.showDoc = function showDoc(aDocPath, aContents) {
   if ("mode" in env)
     options.mode = env.mode;
 
+  var loadPromise =
   when(loader.parseDocument(aContents, aDocPath, options),
-       function(parsed) {
+       function showDocParsed(parsed) {
          if (!("app" in parsed) || parsed.app == "html") {
            showOldSchoolIFrame(parsed);
            return;
@@ -165,7 +166,13 @@ exports.showDoc = function showDoc(aDocPath, aContents) {
          require([appModule], function(app) {
            app.showDoc(parsed, document, gPackageBaseRelPath);
          });
-       });
+       }, null, "root-load", aDocPath);
+
+  document.jstutVisualizeDocLoad = function visDocLoad() {
+    require(["narscribblus/utils/pwomise-vis"], function ($pvis) {
+      $pvis.visualizePromise(document, loadPromise);
+    });
+  };
 };
 
 function showOldSchoolIFrame(parseOutput) {
