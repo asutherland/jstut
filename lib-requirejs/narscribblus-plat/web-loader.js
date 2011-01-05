@@ -166,11 +166,24 @@ exports.showDoc = function showDoc(aDocPath, aContents) {
          require([appModule], function(app) {
            app.showDoc(parsed, document, gPackageBaseRelPath);
          });
-       }, null, "root-load", aDocPath);
+       },
+       function showDocParseFailure(ex) {
+         // force app-doc in failure cases since it has provision for failure
+         //  display
+         require(["narscribblus/present/app-doc"], function(app) {
+           app.showDoc({
+                         app: "parse-failure",
+                         kind: "webbish",
+                         path: aDocPath,
+                         ex: ex
+                       },
+                       document, gPackageBaseRelPath);
+         });
+       }, "root-load", aDocPath);
 
-  document.jstutVisualizeDocLoad = function visDocLoad() {
+  document.jstutVisualizeDocLoad = function visDocLoad(showBoring) {
     require(["narscribblus/utils/pwomise-vis"], function ($pvis) {
-      $pvis.visualizePromise(document, loadPromise);
+      $pvis.visualizePromise(document, loadPromise, showBoring);
     });
   };
 };
