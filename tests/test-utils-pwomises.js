@@ -61,14 +61,14 @@ var when = pwomise.when, defer = pwomise.defer, forward = pwomise.forward,
  * @return[PromiseTreeNode]
  */
 function treeifyPromise(p) {
-  if ("betterPromise" in p)
-    p = p.betterPromise;
-
   // build the node that describes us
   var self;
   if ("promiseDeps" in p) {
     self = {name: p.what, kids: []};
     for (var i = 0; i < p.promiseDeps.length; i++) {
+      // ignore bounce for now...
+      if (p.promiseDeps[i] === "bounce")
+        continue;
       var kid = treeifyPromise(p.promiseDeps[i]);
       if (kid.length == 1)
         kid = kid[0];
@@ -143,10 +143,10 @@ exports.testCakeSimple = function(test) {
             name: "auto:ice",
             kids: [
               {
-                name: "bake",
+                name: "auto:bake",
                 kids: [
                   {
-                    name: "mix",
+                    name: "auto:mix",
                     kids: [
                       {
                         "name": "ingredients",
@@ -155,10 +155,12 @@ exports.testCakeSimple = function(test) {
                           "eggs"
                         ]
                       },
+                      "mix",
                     ]
                   },
+                  "bake",
                 ]
-              }
+              },
             ],
           },
         ]

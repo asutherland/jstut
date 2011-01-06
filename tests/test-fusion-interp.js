@@ -123,7 +123,7 @@ function checkTwo(test, minfo) {
 
   test.assert("one" in globalNS.childrenByName, "one in global namespace");
   var one = globalNS.childrenByName.one;
-  test.assertEqual(one.name, "exports");
+  test.assertEqual(one.name, minfo.name.replace("two", "one") + ":exports");
 
   test.done();
 }

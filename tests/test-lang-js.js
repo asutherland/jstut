@@ -36,87 +36,23 @@
  * ***** END LICENSE BLOCK ***** */
 
 /**
- * Widgets for the interactive language: collapsey blocks, trace output,
- *  example code, and more.
+ * Test langs/js in a strictly single-file mode of operation.  Cross-file
+ *  logic happens in test-fusion-interp.js.
  **/
 
-define("narscribblus/present/manual",
+define("narscribblus-tests/test-lang-js",
   [
-    "wmsy/wmsy",
-    "narscribblus-plat/bespin-loader",
+    "exports"
   ],
   function(
-    $wmsy,
-    $bespin_loader
+    exports
   ) {
 
-var wy = new $wmsy.WmsyDomain({id: "manual",
-                               domain: "jstut",
-                               clickToFocus: true});
+/**
+ * Load osterone.js with the js language in
+ */
+exports.testOsterOne = function() {
 
-wy.defineWidget({
-  name: "doc-link",
-  doc: "Inline href-style documentation link.",
-  constraint: {
-    type: "stream",
-    obj: {kind: "doclink"},
-  },
-  structure: wy.stream({type: "stream"}, "kids"),
-  emit: ["navigate"],
-  events: {
-    root: {
-      command: function() {
-        this.emit_navigate("doc",
-                           this.obj.citingPackageName + "/" + this.obj.docPath);
-      },
-    }
-  },
-  style: {
-    root: [
-      "color: #204a87;",
-      "cursor: pointer;",
-    ],
-  },
-});
-
-wy.defineWidget({
-  name: "topic-link",
-  doc: "Button-looking topic documentation link; more blatant than a doc-link.",
-  constraint: {
-    type: "stream",
-    obj: {kind: "topiclink"},
-  },
-  structure: wy.stream({type: "stream"}, "kids"),
-  emit: ["navigate"],
-  events: {
-    root: {
-      command: function() {
-        this.emit_navigate("doc",
-                           this.obj.citingPackageName + "/" + this.obj.docPath);
-      },
-    }
-  },
-  style: {
-    root: {
-      _: [
-        "display: inline-block;",
-        "font-size: 10px;",
-        "background-color: #f57900;",
-        "border: 1px solid transparent;",
-        "border-radius: 4px;",
-        "padding: 0px 3px;",
-        "color: white;",
-        "cursor: pointer;",
-        "margin-left: 0.5em;",
-      ],
-      ":hover": [
-        "background-color: #fcaf3e;",
-        "border: 1px solid #f57900;",
-      ],
-    },
-  },
-});
-
-
+};
 
 }); // end define
