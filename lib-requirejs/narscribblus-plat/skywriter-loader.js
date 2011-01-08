@@ -58,7 +58,8 @@ var when = $pwomise.when;
 
 var loadPromise;
 // dynamically loaded ace deps.
-var $env, $pluginManager, $editor, $renderer, $document, $theme;
+var $env, $pluginManager, $editor, $renderer, $document, $undoManager, $theme,
+    $aceJsMode;
 // dynamically loaded jstut stuff
 var $globalTokenizer, $jstutTokenizer;
 
@@ -77,7 +78,8 @@ var editorThunkOnDocumentModeChange = function() {
 
   if (!this.bgTokenizer) {
     var onUpdate = this.onTokenizerUpdate.bind(this);
-    this.bgTokenizer = new $globalTokenizer.GlobalTokenizer(tokenizer, this);
+    this.bgTokenizer =
+      new $globalTokenizer.GlobalFallbackTokenizer(tokenizer, this);
     this.bgTokenizer.addEventListener("update", onUpdate);
   } else {
     this.bgTokenizer.setTokenizer(tokenizer);
@@ -85,6 +87,20 @@ var editorThunkOnDocumentModeChange = function() {
 
   this.renderer.setTokenizer(this.bgTokenizer);
 };
+
+/**
+ * This is a modified version of ace/editor's onDocumentChange method that
+ *  also tells the bgTokenizer the last row that changed.
+ */
+function editorThunkDocumentChange(e) {
+  var data = e.data;
+  this.bgTokenizer.start(data.firstRow, data.lastRow);
+  this.renderer.updateLines(data.firstRow, data.lastRow);
+
+  // update cursor because tab characters can influence the cursor position
+  this.renderer.updateCursor(this.getCursorPosition(), this.$overwrite);
+};
+
 
 /**
  * Return a promise that resolves once all the skywriter startup has happened.
@@ -99,17 +115,23 @@ exports.loadSkywriter = function loadSkywriter() {
   require(
     ["pilot/plugin_manager", "pilot/settings", "pilot/environment",
      "ace/editor", "ace/virtual_renderer", "ace/document",
-     "ace/theme/textmate",
-     "jstut/skywriter/global_tokenizer"],
+     "ace/undomanager",
+     "ace/mode/javascript", "ace/theme/textmate",
+     "jstut/skywriter/global_tokenizer",
+     "jstut/skywriter/jstut_tokenizer"],
     function(m_pluginManager, $settings, m_env,
              m_editor, m_renderer, m_document,
-             m_theme,
-             m_globalTokenizer) {
+             m_undoManager,
+             m_ace_js_mode, m_theme,
+             m_globalTokenizer,
+             m_jstutTokenizer) {
       $pluginManager = m_pluginManager;
       $env = m_env;
       $editor = m_editor;
       $renderer = m_renderer;
       $document = m_document;
+      $undoManager = m_undoManager,
+      $aceJsMode = m_ace_js_mode;
       // we're using textmate until we can convert proton over.
       $theme = m_theme;
       // our skywriter stuff
@@ -119,12 +141,15 @@ exports.loadSkywriter = function loadSkywriter() {
       // thunk editor so our tokenizer can get the info it needs.
       $editor.Editor.prototype.onDocumentModeChange =
         editorThunkOnDocumentModeChange;
+      $editor.Editor.prototype.onDocumentChange = editorThunkDocumentChange;
 
       $pluginManager.catalog.registerPlugins(["pilot/index", "cockpit/index"])
         .then(function() {
-
+          deferred.resolve();
         });
     });
+
+  return loadPromise;
 };
 
 
@@ -134,10 +159,20 @@ exports.makeEditor = function makeEditor(domNode, code) {
       var env = $env.create();
       $pluginManager.catalog.startupPlugins({env: env}).then(function() {
         env.editor = new $editor.Editor(
-                       new $renderer.Renderer(domNode, $theme));
+                       new $renderer.VirtualRenderer(domNode, $theme));
         var doc = new $document.Document(code);
-        doc.setMode(new
+        var aceJsMode = new $aceJsMode.Mode();
+        var jstutTokenizer = new $jstutTokenizer.JstutTokenizer(
+                               aceJsMode.getTokenizer());
+        // leave $tokenizer intact for getNextLineIndent.
+        aceJsMode.getTokenizer = function() {
+          return jstutTokenizer;
+        };
+        doc.setMode(aceJsMode);
+        doc.setUndoManager(new $undoManager.UndoManager());
         env.editor.setDocument(doc);
+        env.editor.focus();
+        env.editor.resize();
       });
     },
     null, "makeEditor");
