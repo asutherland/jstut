@@ -16,7 +16,10 @@
         console.log(aMsgWithNewline.replace("\n", "", "g"));
       }
     </script>
+<!--
     <script type="text/javascript" src="../../requirejs/require.js"></script>
+-->
+<script type="text/javascript" src="/cjs/ace/demo/require.js"></script>
   <script>
     require(
       {
@@ -31,10 +34,12 @@
         },
         packages: [
           // skywriter (or rather ace) stuff, which we are leaving under ace
-          { name: "ace", location: "ace" },
-          { name: "cockpit", location: "ace/support/cockpit", main: "index" },
-          { name: "pilot", location: "ace/support/cockpit/support/pulot",
+          { name: "ace", location: "ace", lib: "lib/ace"},
+          { name: "cockpit", location: "ace/support/cockpit",
+            lib: "lib/cockpit",
             main: "index" },
+          { name: "pilot", location: "ace/support/cockpit/support/pilot",
+            lib: "lib/pilot", main: "index" },
         ],
       },
       ["requirejs/global-es5", "narscribblus-plat/web-loader"],
