@@ -61,7 +61,7 @@ var loadPromise;
 var $env, $pluginManager, $editor, $renderer, $document, $undoManager, $theme,
     $aceJsMode;
 // dynamically loaded jstut stuff
-var $globalTokenizer, $jstutTokenizer;
+var $abstractHookup, $globalTokenizer, $jstutTokenizer;
 
 /**
  * This is a modified version of ace/editor's
@@ -117,12 +117,14 @@ exports.loadSkywriter = function loadSkywriter() {
      "ace/editor", "ace/virtual_renderer", "ace/document",
      "ace/undomanager",
      "ace/mode/javascript", "ace/theme/textmate",
+     "jstut/skywriter/abstract_hookup",
      "jstut/skywriter/global_tokenizer",
      "jstut/skywriter/jstut_tokenizer"],
     function(m_pluginManager, $settings, m_env,
              m_editor, m_renderer, m_document,
              m_undoManager,
              m_ace_js_mode, m_theme,
+             m_abstractHookup,
              m_globalTokenizer,
              m_jstutTokenizer) {
       $pluginManager = m_pluginManager;
@@ -135,6 +137,7 @@ exports.loadSkywriter = function loadSkywriter() {
       // we're using textmate until we can convert proton over.
       $theme = m_theme;
       // our skywriter stuff
+      $abstractHookup = m_abstractHookup;
       $globalTokenizer = m_globalTokenizer;
       $jstutTokenizer = m_jstutTokenizer;
 
@@ -163,7 +166,7 @@ exports.makeEditor = function makeEditor(domNode, code) {
         var doc = new $document.Document(code);
         var aceJsMode = new $aceJsMode.Mode();
         var jstutTokenizer = new $jstutTokenizer.JstutTokenizer(
-                               aceJsMode.getTokenizer());
+                               aceJsMode.getTokenizer(), env);
         // leave $tokenizer intact for getNextLineIndent.
         aceJsMode.getTokenizer = function() {
           return jstutTokenizer;
@@ -173,6 +176,8 @@ exports.makeEditor = function makeEditor(domNode, code) {
         env.editor.setDocument(doc);
         env.editor.focus();
         env.editor.resize();
+        
+        $abstractHookup.injectIntoEditor(env.editor);
       });
     },
     null, "makeEditor");

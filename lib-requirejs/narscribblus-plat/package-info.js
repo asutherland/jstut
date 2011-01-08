@@ -56,7 +56,9 @@ define("narscribblus-plat/package-info",
     pwomise
   ) {
 
-var config = require.s.contexts._.config;
+
+var config = ("config" in localRequire) ? localRequire.config
+                                        : require.s.contexts._.config;
 
 function commonLoad(url, promiseName, promiseRef) {
   var deferred = pwomise.defer(promiseName, promiseRef);
