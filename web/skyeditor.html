@@ -45,10 +45,37 @@
             lib: "lib/pilot", main: "index" },
         ],
       },
-      ["requirejs/global-es5", "narscribblus-plat/skywriter-loader"],
-      function(es5, $skyLoader) {
-        $skyLoader.makeEditor(document.getElementById("editor"),
-                              document.getElementById("jssrc").textContent);
+      ["requirejs/global-es5", "narscribblus-plat/skywriter-loader",
+       "wmsy/wmsy", "narscribblus/present/interactive",
+       "narscribblus/readers/js",
+       "narscribblus/present/type-basics", "narscribblus/present/code-blocks"],
+      // we previously just bound the editor directly, but now that we need
+      //  additional wmsy things happening, we create a fake EditableCode,
+      //  directly inject it, then force the binding to switch into editor
+      //  mode.
+      // we should likely just consider completely using the narscribblus
+      //  document loader mechanism with a very specific test document that
+      //  forces the thing into an editor mode...
+      function(es5, $skyLoader, $wmsy, $ui_interactive, $reader_js,
+               $ui_type_basics) {
+        var emitter = $ui_interactive.wy.wrapElement(
+                        document.getElementById("body"));
+        var jssrc = document.getElementById("jssrc").textContent;
+
+        var fakeContext = {
+          filename: "fromdom",
+          rawMode: false,
+        };
+
+
+        var block = $reader_js.reader_js(jssrc,fakeContext)[0];
+        console.log("jssrc", {src: jssrc}, "block", block);
+        var fakeEditableCode = {
+          kind: "editable-code",
+          code: block,
+        };
+        var binding = emitter.bind({type: "stream", obj: fakeEditableCode});
+        binding.goEdit();
       }
     );
   </script>
@@ -74,7 +101,5 @@ wy.defineWidget({
   },
 });
 </pre>
-  <div id="editor" style="height: 600px; width: 100%;">
-  </div>
 </body>
 </html>

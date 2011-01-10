@@ -156,13 +156,14 @@ exports.loadSkywriter = function loadSkywriter() {
 };
 
 
-exports.makeEditor = function makeEditor(domNode, code) {
+exports.makeEditor = function makeEditor(binding, domNode, code) {
   return when(exports.loadSkywriter(),
     function() {
       var env = $env.create();
       $pluginManager.catalog.startupPlugins({env: env}).then(function() {
         env.editor = new $editor.Editor(
                        new $renderer.VirtualRenderer(domNode, $theme));
+        env.editor.wmsyBinding = binding;
         var doc = new $document.Document(code);
         var aceJsMode = new $aceJsMode.Mode();
         var jstutTokenizer = new $jstutTokenizer.JstutTokenizer(
@@ -176,7 +177,7 @@ exports.makeEditor = function makeEditor(domNode, code) {
         env.editor.setDocument(doc);
         env.editor.focus();
         env.editor.resize();
-        
+
         $abstractHookup.injectIntoEditor(env.editor);
       });
     },
