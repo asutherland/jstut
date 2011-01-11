@@ -166,9 +166,17 @@ exports.makeEditor = function makeEditor(binding, domNode, code) {
         env.editor.wmsyBinding = binding;
         var doc = new $document.Document(code);
         var aceJsMode = new $aceJsMode.Mode();
+
         var jstutTokenizer = new $jstutTokenizer.JstutTokenizer(
                                aceJsMode.getTokenizer(), env);
-        // leave $tokenizer intact for getNextLineIndent.
+        // Tell the binding about the tokenizer so that it can tell the
+        //  tokenizer about updated preAsts.
+        binding.jstutTokenizer = jstutTokenizer;
+        // Also snapshot the current state of the preAsts.
+        jstutTokenizer.preAsts = binding.obj.preAsts;
+
+        // Leave $tokenizer intact for getNextLineIndent, but make the mode
+        //  report the jstutTokenizer as its tokenizer.
         aceJsMode.getTokenizer = function() {
           return jstutTokenizer;
         };
