@@ -48,7 +48,8 @@
       ["requirejs/global-es5", "narscribblus-plat/skywriter-loader",
        "wmsy/wmsy", "narscribblus/present/interactive",
        "narscribblus/readers/js",
-       "narscribblus/present/type-basics", "narscribblus/present/code-blocks"],
+       "narscribblus/present/type-basics", "narscribblus/present/code-blocks",
+       "narscribblus/present/app-doc"],
       // we previously just bound the editor directly, but now that we need
       //  additional wmsy things happening, we create a fake EditableCode,
       //  directly inject it, then force the binding to switch into editor
@@ -57,8 +58,8 @@
       //  document loader mechanism with a very specific test document that
       //  forces the thing into an editor mode...
       function(es5, $skyLoader, $wmsy, $ui_interactive, $reader_js,
-               $ui_type_basics) {
-        var emitter = $ui_interactive.wy.wrapElement(
+               $ui_type_basics, $ui_code_blocks, $ui_app_doc) {
+        var emitter = $ui_app_doc.wy.wrapElement(
                         document.getElementById("body"));
         var jssrc = document.getElementById("jssrc").textContent;
 
@@ -67,15 +68,27 @@
           rawMode: false,
         };
 
-
         var block = $reader_js.reader_js(jssrc,fakeContext)[0];
         console.log("jssrc", {src: jssrc}, "block", block);
         var fakeEditableCode = {
           kind: "editable-code",
           code: block,
+          preAsts: [],
         };
-        var binding = emitter.bind({type: "stream", obj: fakeEditableCode});
-        binding.goEdit();
+
+        var rootObj = {
+          appData: {
+            app: "doc",
+            textStream: [fakeEditableCode],
+          },
+        };
+        var binding = emitter.bind({type: "app-root", obj: rootObj});
+        var button = document.documentElement.querySelector(
+                      'input[type="button"][value="Edit..."]');
+        // this bit is more brittle than the rest of the sketchy stuff we
+        //  are doing here...
+        var editableCodeBinding = button.parentNode.binding;
+        editableCodeBinding.goEdit();
       }
     );
   </script>

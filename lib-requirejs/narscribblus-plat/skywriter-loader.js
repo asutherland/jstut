@@ -174,6 +174,9 @@ exports.makeEditor = function makeEditor(binding, domNode, code) {
         binding.jstutTokenizer = jstutTokenizer;
         // Also snapshot the current state of the preAsts.
         jstutTokenizer.preAsts = binding.obj.preAsts;
+        // The binding also needs to know about the editor to shunt focus back
+        //  to it.
+        binding.editor = env.editor;
 
         // Leave $tokenizer intact for getNextLineIndent, but make the mode
         //  report the jstutTokenizer as its tokenizer.
