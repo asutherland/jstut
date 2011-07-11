@@ -39,10 +39,10 @@
  * Test scribble syntax parsing fundamentals.
  **/
 
-define("narscribblus-tests/test-syntax",
+define("jstut-tests/test-syntax",
   [
-    "narscribblus/readers/scribble-syntax",
-    "narscribblus/doc-loader",
+    "jstut/readers/scribble-syntax",
+    "jstut/doc-loader",
     "exports"
   ],
   function(

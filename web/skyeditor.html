@@ -28,11 +28,10 @@
         baseUrl: "../../",
         // jstut stuff
         paths: {
-          "jstut": "narscribblus/lib/jstut",
+          "jstut": "jstut/lib/jstut",
           //"require": "requirejs/require",
           "requirejs": "requirejs/build/convert/commonjs",
-          "narscribblus": "narscribblus/lib/narscribblus",
-          "narscribblus-plat": "narscribblus/lib-requirejs/narscribblus-plat",
+          "jstut-plat": "jstut/lib-requirejs/jstut-plat",
           "wmsy": "wmsy/lib/wmsy/",
         },
         packages: [
@@ -45,16 +44,16 @@
             lib: "lib/pilot", main: "index" },
         ],
       },
-      ["requirejs/global-es5", "narscribblus-plat/skywriter-loader",
-       "wmsy/wmsy", "narscribblus/present/interactive",
-       "narscribblus/readers/js",
-       "narscribblus/present/type-basics", "narscribblus/present/code-blocks",
-       "narscribblus/present/app-doc"],
+      ["requirejs/global-es5", "jstut-plat/skywriter-loader",
+       "wmsy/wmsy", "jstut/present/interactive",
+       "jstut/readers/js",
+       "jstut/present/type-basics", "jstut/present/code-blocks",
+       "jstut/present/app-doc"],
       // we previously just bound the editor directly, but now that we need
       //  additional wmsy things happening, we create a fake EditableCode,
       //  directly inject it, then force the binding to switch into editor
       //  mode.
-      // we should likely just consider completely using the narscribblus
+      // we should likely just consider completely using the jstut
       //  document loader mechanism with a very specific test document that
       //  forces the thing into an editor mode...
       function(es5, $skyLoader, $wmsy, $ui_interactive, $reader_js,

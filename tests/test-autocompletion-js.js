@@ -52,7 +52,7 @@
  *   - user has started typing a function call with (
  **/
 
-define("narscribblus-tests/test-autocompletion-js",
+define("jstut-tests/test-autocompletion-js",
   [
     "exports"
   ],

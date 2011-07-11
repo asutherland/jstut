@@ -26,10 +26,9 @@
         baseUrl: "../../",
         // jstut stuff
         paths: {
-          "jstut": "narscribblus/lib/jstut",
+          "jstut": "jstut/lib/jstut",
           "requirejs": "requirejs/build/convert/commonjs",
-          "narscribblus": "narscribblus/lib/narscribblus",
-          "narscribblus-plat": "narscribblus/lib-requirejs/narscribblus-plat",
+          "jstut-plat": "jstut/lib-requirejs/jstut-plat",
           "wmsy": "wmsy/lib/wmsy/",
         },
         packages: [
@@ -42,7 +41,7 @@
             lib: "lib/pilot", main: "index" },
         ],
       },
-      ["requirejs/global-es5", "narscribblus-plat/web-loader"],
+      ["requirejs/global-es5", "jstut-plat/web-loader"],
       function(es5, mainModule) {
         mainModule.main("../../");
       }

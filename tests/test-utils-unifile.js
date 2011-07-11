@@ -35,10 +35,10 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-define("narscribblus-tests/test-utils-unifile",
+define("jstut-tests/test-utils-unifile",
   [
-    "narscribblus/utils/pwomise",
-    "narscribblus-plat/utils/unifile",
+    "jstut/utils/pwomise",
+    "jstut-plat/utils/unifile",
     "exports"
   ],
   function(
@@ -51,10 +51,10 @@ var FAKE_RESULT =
   '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">\n' +
   '<html> \n' +
   ' <head> \n' +
-  '  <title>Index of /cjs/narscribblus</title> \n' +
+  '  <title>Index of /cjs/jstut</title> \n' +
   ' </head> \n' +
   ' <body> \n' +
-  '<h1>Index of /cjs/narscribblus</h1> \n' +
+  '<h1>Index of /cjs/jstut</h1> \n' +
   '<pre><img src="/icons/blank.gif" alt="Icon "> <a href="?C=N;O=D;F=1">Name</a>                    <a href="?C=M;O=A;F=1">Last modified</a>      <a href="?C=S;O=A;F=1">Size</a>  <a href="?C=D;O=A;F=1">Description</a><hr><img src="/icons/back.gif" alt="[DIR]"> <a href="/cjs/">Parent Directory</a>                             -   \n' +
   '<img src="/icons/folder.gif" alt="[DIR]"> <a href="data/">data/</a>                   04-Aug-2010 23:26    -   \n' +
   '<img src="/icons/folder.gif" alt="[DIR]"> <a href="lib/">lib/</a>                    26-Jul-2010 07:19    -   \n' +

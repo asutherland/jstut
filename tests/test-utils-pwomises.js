@@ -35,9 +35,9 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-define("narscribblus-tests/test-utils-pwomises",
+define("jstut-tests/test-utils-pwomises",
   [
-    "narscribblus/utils/pwomise",
+    "jstut/utils/pwomise",
     "exports"
   ],
   function(

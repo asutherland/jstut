@@ -42,10 +42,10 @@
  *  (define) case.
  **/
 
-define("narscribblus-tests/test-fusion-interp",
+define("jstut-tests/test-fusion-interp",
   [
-    "narscribblus/docfusion",
-    "narscribblus/utils/pwomise",
+    "jstut/docfusion",
+    "jstut/utils/pwomise",
     "exports"
   ],
   function(
@@ -57,7 +57,7 @@ define("narscribblus-tests/test-fusion-interp",
 var docFusion = $docfusion.docFusion;
 var when = $pwomise.when;
 
-var TEST_PACKAGE = "narscribblus/testfodder";
+var TEST_PACKAGE = "jstut/testfodder";
 
 var SYNC_ONE = TEST_PACKAGE + "/sync_one";
 var SYNC_TWO = TEST_PACKAGE + "/sync_two";

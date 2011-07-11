@@ -35,9 +35,9 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-define("narscribblus-tests/test-lang-jetpack-docs",
+define("jstut-tests/test-lang-jetpack-docs",
   [
-    "narscribblus/langs/jetpack-doc",
+    "jstut/langs/jetpack-doc",
     "exports"
   ],
   function(

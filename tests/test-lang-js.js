@@ -40,7 +40,7 @@
  *  logic happens in test-fusion-interp.js.
  **/
 
-define("narscribblus-tests/test-lang-js",
+define("jstut-tests/test-lang-js",
   [
     "exports"
   ],
