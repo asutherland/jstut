@@ -79,7 +79,6 @@ exports.urlFetch = commonLoad;
  */
 function loadSource(aSourceRef) {
   var url = localRequire.nameToUrl(aSourceRef, null);
-console.log("mapped source ref", aSourceRef, "to", url);
   return commonLoad(url, "load.source", aSourceRef);
 }
 exports.loadSource = loadSource;
@@ -90,7 +89,6 @@ function commonPackageLoad(aRef, aDirName) {
   var relPath = refParts.slice(1).join("/");
 
   var url = config.baseUrl + packageName + "/" + aDirName + "/" + relPath;
-console.log("package mapped", aRef, aDirName, "to", url);
   return commonLoad(url, "load." + aDirName, aRef);
 }
 exports.loadAnything = commonPackageLoad;
