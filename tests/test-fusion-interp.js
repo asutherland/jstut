@@ -54,7 +54,7 @@ define("jstut-tests/test-fusion-interp",
     exports
   ) {
 
-var docFusion = $docfusion.docFusion;
+var docFusion = new $docfusion.DocFusion();
 var when = $pwomise.when;
 
 var TEST_PACKAGE = "jstut/testfodder";

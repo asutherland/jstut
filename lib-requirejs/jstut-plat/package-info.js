@@ -54,7 +54,6 @@ define(
 
 var config = ("config" in localRequire) ? localRequire.config
                                         : require.s.contexts._.config;
-console.log("config", config, "localRequire", localRequire);
 
 function commonLoad(url, promiseName, promiseRef) {
   var deferred = pwomise.defer(promiseName, promiseRef);
@@ -73,6 +72,7 @@ function commonLoad(url, promiseName, promiseRef) {
   req.send(null);
   return deferred.promise;
 }
+exports.urlFetch = commonLoad;
 
 /**
  * Returns a promise that provides the source of a given module.

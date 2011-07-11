@@ -49,6 +49,7 @@ define("jstut-plat/web-loader",
     "jstut-plat/package-info",
     "jstut-plat/utils/env",
     "jstut/utils/pwomise",
+    "jstut/docfusion"
   ],
   function (
     exports,
@@ -56,43 +57,42 @@ define("jstut-plat/web-loader",
     loader,
     pkginfo,
     $env,
-    pwomise
+    pwomise,
+    $docfusion
   ) {
 
 var when = pwomise.when;
 
-var gPackageBaseRelPath;
+var gPackageBaseRelPath, gDocFusion = null;
 
-exports.main = function web_loader_main(relPath) {
+exports.main = function web_loader_main(relPath, pathToJstutJson) {
   gPackageBaseRelPath = relPath;
-  var env = $env.getEnv();
-  if (!("doc" in env) && !("src" in env) && !("srcdoc" in env)) {
-    var body = document.getElementsByTagName("body")[0];
-    body.innerHTML = "I am going to level with you. " +
-      "I need you to put the path of the jstut doc in the 'doc' " +
-      "argument type thing.  Failure to do so results in sadness and messages "+
-      "like this one.  <i>Sniff sniff</i>.";
-    return;
-  }
-  var path;
-  if ("doc" in env) {
-    path = env.doc;
-    when(pkginfo.loadData(path),
-         exports.showDoc.bind(null, path),
-         explodeSadFace.bind(null, path));
-  }
-  else if ("src" in env) {
-    path = env.src;
-    when(pkginfo.loadSource(path),
-         exports.showDoc.bind(null, path),
-         explodeSadFace.bind(null, path));
-  }
-  else if ("srcdoc" in env) {
-    path = env.srcdoc;
-    when(pkginfo.loadDoc(path),
-         exports.showDoc.bind(null, path),
-         explodeSadFace.bind(null, path));
-  }
+  var env = $env.getEnv(), path;
+  // - if nothing is specified, give them the overview for the package.
+  gDocFusion = new $docfusion.DocFusion();
+  when(gDocFusion.bootstrapUniverse,
+       function() {
+    if (!("doc" in env) && !("src" in env) && !("srcdoc" in env)) {
+    }
+    if ("doc" in env) {
+      path = env.doc;
+      when(pkginfo.loadData(path),
+           exports.showDoc.bind(null, path),
+           explodeSadFace.bind(null, path));
+    }
+    else if ("src" in env) {
+      path = env.src;
+      when(pkginfo.loadSource(path),
+           exports.showDoc.bind(null, path),
+           explodeSadFace.bind(null, path));
+    }
+    else if ("srcdoc" in env) {
+      path = env.srcdoc;
+      when(pkginfo.loadDoc(path),
+           exports.showDoc.bind(null, path),
+           explodeSadFace.bind(null, path));
+    }
+  }, explodeSadFace.bind(null, pathToJstutJson));
 };
 
 function explodeSadFace(aDocPath, aStatusCode) {
@@ -132,6 +132,7 @@ function explodeSadFace(aDocPath, aStatusCode) {
 exports.showDoc = function showDoc(aDocPath, aContents) {
   var env = $env.getEnv();
   var options = {
+    docFusion: gDocFusion,
   };
   var docPath = env.doc;
   if ("src" in env) {
@@ -188,6 +189,12 @@ exports.showDoc = function showDoc(aDocPath, aContents) {
   };
 };
 
+/**
+ * Display the provided parse output in an iframe.  This was the original
+ *  means of display before we started using wmsy for almost everything. This
+ *  sticks around for some of the debugging representations which are fine
+ *  with straight-up HTML generation followed by a "livejection" fix-up pass.
+ */
 function showOldSchoolIFrame(parseOutput) {
   var body = document.getElementsByTagName("body")[0];
   body.setAttribute(
