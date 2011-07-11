@@ -44,7 +44,7 @@
 
 define("jstut-plat/skywriter-loader",
   [
-    "narscribblus/utils/pwomise",
+    "jstut/utils/pwomise",
     "jstut-plat/package-info",
     "exports"
   ],

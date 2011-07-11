@@ -38,9 +38,9 @@
 define("jstut-plat/chrome-loader",
   [
     "exports",
-    "narscribblus/doc-loader",
+    "jstut/doc-loader",
     "jstut-plat/package-info",
-    "narscribblus/utils/pwomise",
+    "jstut/utils/pwomise",
   ],
   function (
     exports,
@@ -55,7 +55,7 @@ exports.main = function(document, env) {
   if (!("doc" in env) && !("src" in env)) {
     var body = document.getElementsByTagName("body")[0];
     body.innerHTML = "I am going to level with you. " +
-      "I need you to put the path of the narscribblus doc in the 'doc' " +
+      "I need you to put the path of the jstut doc in the 'doc' " +
       "argument type thing.  Failure to do so results in sadness and messages "+
       "like this one.  <i>Sniff sniff</i>.";
     return;
@@ -100,7 +100,7 @@ exports.showDoc = function showDoc(aDocPath, document, env, aContents) {
      */
     makeDocLink: function(aDocPath, aCitingPackageName, aOptArgs) {
       aDocPath = aCitingPackageName + "/" + aDocPath;
-      var ls = 'about:narscribblus?doc=' + encodeURIComponent(aDocPath);
+      var ls = 'about:jstut?doc=' + encodeURIComponent(aDocPath);
       if (aOptArgs) {
         for (var key in aOptArgs) {
           ls += "&" + key + "=" + encodeURIComponent(aOptArgs[key]);
@@ -119,7 +119,7 @@ exports.showDoc = function showDoc(aDocPath, document, env, aContents) {
   };
   var docPath = env.doc;
   if ("src" in env) {
-    options.lang = "narscribblus/js";
+    options.lang = "jstut/js";
     docPath = env.src;
   }
   if ("forcelang" in env)

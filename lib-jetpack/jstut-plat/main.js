@@ -38,7 +38,7 @@
 define("jstut-plat/main",
   [
     "exports",
-    "narscribblus/doc-loader",
+    "jstut/doc-loader",
     "jstut-plat/skwbl-protocol",
     "xul-app",
     "self",
@@ -56,7 +56,7 @@ define("jstut-plat/main",
  *  a URI that can tell it how to get back to us.
  */
 function showWhereYouCan(aFilename) {
-  var url = "about:narscribblus?doc=" + encodeURIComponent(aFilename);
+  var url = "about:jstut?doc=" + encodeURIComponent(aFilename);
   if (xulapp.is("Firefox")) {
     var tabs = require("tabs");
     tabs.open({ url: url });

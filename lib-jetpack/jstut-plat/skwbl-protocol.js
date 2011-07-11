@@ -36,7 +36,7 @@
  * ***** END LICENSE BLOCK ***** */
 
 /**
- * Exposes the narscribblus loader as about:narscribblus and makes sure it
+ * Exposes the jstut loader as about:jstut and makes sure it
  *  gets chrome privileges.
  **/
 
@@ -44,7 +44,7 @@ var self = require("self");
 
 var protocol =
   require("jstut-plat/opc/about-protocol")
-    .register("narscribblus",
+    .register("jstut",
               true,
               self.data.url("chrome-loader.xul"));
 

@@ -48,7 +48,7 @@ define("jstut-plat/package-info",
   [
     "exports",
     "require",
-    "narscribblus/utils/pwomise",
+    "jstut/utils/pwomise",
   ],
   function(
     exports,

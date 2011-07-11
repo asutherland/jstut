@@ -43,7 +43,7 @@
 define("jstut-plat/utils/unifile",
   [
     "exports",
-    "narscribblus/utils/pwomise",
+    "jstut/utils/pwomise",
     "xhr",
     "file",
     "url",

@@ -45,10 +45,10 @@ define("jstut-plat/web-loader",
   [
     "exports",
     "require",
-    "narscribblus/doc-loader",
+    "jstut/doc-loader",
     "jstut-plat/package-info",
     "jstut-plat/utils/env",
-    "narscribblus/utils/pwomise",
+    "jstut/utils/pwomise",
   ],
   function (
     exports,
@@ -69,7 +69,7 @@ exports.main = function web_loader_main(relPath) {
   if (!("doc" in env) && !("src" in env) && !("srcdoc" in env)) {
     var body = document.getElementsByTagName("body")[0];
     body.innerHTML = "I am going to level with you. " +
-      "I need you to put the path of the narscribblus doc in the 'doc' " +
+      "I need you to put the path of the jstut doc in the 'doc' " +
       "argument type thing.  Failure to do so results in sadness and messages "+
       "like this one.  <i>Sniff sniff</i>.";
     return;
@@ -135,7 +135,7 @@ exports.showDoc = function showDoc(aDocPath, aContents) {
   };
   var docPath = env.doc;
   if ("src" in env) {
-    options.lang = "narscribblus/js";
+    options.lang = "jstut/js";
     docPath = env.src;
   }
   if ("forcelang" in env)
@@ -154,10 +154,10 @@ exports.showDoc = function showDoc(aDocPath, aContents) {
          var appModule;
          switch (parsed.app) {
            case "browse":
-             appModule = "narscribblus/present/app-browse";
+             appModule = "jstut/present/app-browse";
              break;
            case "doc":
-             appModule = "narscribblus/present/app-doc";
+             appModule = "jstut/present/app-doc";
              break;
            default:
              throw new Error("unrecognized app code: " + parsed.app);
@@ -170,7 +170,7 @@ exports.showDoc = function showDoc(aDocPath, aContents) {
        function showDocParseFailure(ex) {
          // force app-doc in failure cases since it has provision for failure
          //  display
-         require(["narscribblus/present/app-doc"], function(app) {
+         require(["jstut/present/app-doc"], function(app) {
            app.showDoc({
                          app: "parse-failure",
                          kind: "webbish",
@@ -182,7 +182,7 @@ exports.showDoc = function showDoc(aDocPath, aContents) {
        }, "root-load", aDocPath);
 
   document.jstutVisualizeDocLoad = function visDocLoad(showBoring) {
-    require(["narscribblus/utils/pwomise-vis"], function ($pvis) {
+    require(["jstut/utils/pwomise-vis"], function ($pvis) {
       $pvis.visualizePromise(document, loadPromise, showBoring);
     });
   };
