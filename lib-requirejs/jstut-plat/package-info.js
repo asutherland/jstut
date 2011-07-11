@@ -41,10 +41,10 @@
  *  source around and we may not actually be loading the things we want to look
  *  at, so we fetch things as requested.
  *
- * All public documentation lives in package-info.js.
+ * All public documentation lives in the non-platform specific package-info.js.
  **/
 
-define("jstut-plat/package-info",
+define(
   [
     "exports",
     "require",
@@ -59,6 +59,7 @@ define("jstut-plat/package-info",
 
 var config = ("config" in localRequire) ? localRequire.config
                                         : require.s.contexts._.config;
+console.log("config", config, "localRequire", localRequire);
 
 function commonLoad(url, promiseName, promiseRef) {
   var deferred = pwomise.defer(promiseName, promiseRef);
@@ -83,6 +84,7 @@ function commonLoad(url, promiseName, promiseRef) {
  */
 function loadSource(aSourceRef) {
   var url = localRequire.nameToUrl(aSourceRef, null);
+console.log("mapped source ref", aSourceRef, "to", url);
   return commonLoad(url, "load.source", aSourceRef);
 }
 exports.loadSource = loadSource;
@@ -93,6 +95,7 @@ function commonPackageLoad(aRef, aDirName) {
   var relPath = refParts.slice(1).join("/");
 
   var url = config.baseUrl + packageName + "/" + aDirName + "/" + relPath;
+console.log("package mapped", aRef, aDirName, "to", url);
   return commonLoad(url, "load." + aDirName, aRef);
 }
 exports.loadAnything = commonPackageLoad;

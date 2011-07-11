@@ -1,0 +1,207 @@
+.presentContainer {
+  margin-bottom: 0.3em;
+}
+.typeTitle {
+  display: block;
+  padding: 0.1em 0.3em;
+  border-radius: 0.2em;
+  font-family: sans-serif;
+  font-size: 200%;
+  background-color: #729fcf;
+}
+.heading {
+  display: block;
+  border-radius: 4px;
+  padding: 4px;
+  margin-top: 1em;
+  margin-bottom: 2px;
+  background-color: #dddddd;
+  font-weight: bold;
+  font-family: sans-serif;
+}
+.flowHeading {
+  font-weight: bold;
+}
+.descriptorName {
+  width: 15em;
+  color: #204a87;
+  font-family: sans-serif;
+}
+.expandableBlock {
+  background-color: #e4ecf5;
+  border-bottom: 1px solid #3465a4;
+  padding: 0.2em 0em;
+}
+.hoveredExpandable {
+  background-color: #c9def5;
+}
+.signature {
+  color: gray;
+  font-style: italic;
+}
+.defaultValue {
+  color: #aac;
+}
+
+#stream-cite-descriptor {
+  #root {
+  }
+  #root[optional=true] {
+    font-style: italic;
+  }
+}
+
+#stream-default-desc {
+  #root {
+    .defaultValue;
+  }
+}
+
+#generic-signature {
+  #root {
+    .signature
+  }
+}
+
+#function-signature {
+  #root {
+    .signature
+  }
+}
+
+#dict-signature-simple {
+  #root {
+    .signature
+  }
+}
+
+#dict-signature-complex {
+  #root {
+    .signature
+  }
+  #openSquiggle {
+    display: block;
+  }
+  #ungrouped {
+    margin-left: 1em;
+  }
+  #grouped {
+    margin-left: 1em;
+  }
+}
+
+#group-signature {
+  #root {
+    .signature
+  }
+  #name {
+    .flowHeading;
+  }
+}
+
+#dictof-signature {
+  #root {
+    .signature
+  }
+}
+
+#list-signature {
+  #root {
+    .signature
+  }
+}
+
+#listof-signature {
+  #root {
+    .signature
+  }
+}
+
+#oneof-signature {
+  #root {
+    .signature
+  }
+}
+
+#class-expanded {
+  #arguments {
+    margin-bottom: 1em;
+  }
+}
+
+#group-expanded {
+  #header {
+    .heading;
+  }
+}
+
+#descriptor-expandable {
+  #root {
+    .expandableBlock;
+  }
+  #nameAndTypeRow {
+      display: table;
+      width: 100%;      
+
+  }
+  #nameAndTypeRow[expandable] {
+      cursor: pointer;      
+
+  }
+  #nameAndTypeRow[expandable]:hover {
+      .hoveredExpandable      
+
+      #name {
+        background-image: url(jstut/data/images/section_collapsed_hover.png);
+      }
+      #name[expanded=true] {
+        background-image: url(jstut/data/images/section_expanded_hover.png);
+      }
+  }
+  #name {
+      .descriptorName;
+      display: table-cell;
+      vertical-align: top;
+      background: url(jstut/data/images/section_collapsed.png) no-repeat 0% 0%;
+      padding-left: 20px;      
+
+  }
+  #name[full=true] {
+    background: url(jstut/data/images/section_full.png) no-repeat 0% 0%;
+    cursor: default;
+  }
+  #name[expanded=true] {
+    background: url(jstut/data/images/section_expanded.png) no-repeat 0% 0%;
+  }
+  #typeAndDefault {
+    display: table-cell;
+  }
+  #desc {
+    display: block;
+    margin-left: 2em;
+  }
+  #expanded {
+    margin-left: 3em;
+  }
+}
+
+#present-type {
+  #root {
+    .presentContainer;
+  }
+  #header {
+    .typeTitle;
+  }
+  #kind {
+    font-size: 12px;
+  }
+}
+
+#present-typedef {
+  #root {
+    .presentContainer;
+  }
+  #name {
+    .typeTitle;
+  }
+}
