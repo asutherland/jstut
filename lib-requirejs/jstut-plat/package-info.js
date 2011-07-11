@@ -36,11 +36,6 @@
  * ***** END LICENSE BLOCK ***** */
 
 /**
- * Our teleport implementation here just assumes that the catalog is correct
- *  and bases everything off of that.  Teleport only keeps a copy of the wrapped
- *  source around and we may not actually be loading the things we want to look
- *  at, so we fetch things as requested.
- *
  * All public documentation lives in the non-platform specific package-info.js.
  **/
 
