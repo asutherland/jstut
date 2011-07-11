@@ -70,7 +70,7 @@ exports.main = function web_loader_main(relPath, pathToJstutJson) {
   var env = $env.getEnv(), path;
   // - if nothing is specified, give them the overview for the package.
   gDocFusion = new $docfusion.DocFusion();
-  when(gDocFusion.bootstrapUniverse,
+  when(gDocFusion.bootstrapUniverse(pathToJstutJson),
        function() {
     if (!("doc" in env) && !("src" in env) && !("srcdoc" in env)) {
     }
