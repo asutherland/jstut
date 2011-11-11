@@ -55,7 +55,7 @@ define("jstut-plat/web-loader",
     exports,
     require,
     loader,
-    pkginfo,
+    $pkginfo,
     $env,
     pwomise,
     $docfusion
@@ -68,27 +68,32 @@ var gPackageBaseRelPath, gDocFusion = null;
 exports.main = function web_loader_main(relPath, pathToJstutJson) {
   gPackageBaseRelPath = relPath;
   var env = $env.getEnv(), path;
-  // - if nothing is specified, give them the overview for the package.
   gDocFusion = new $docfusion.DocFusion();
   when(gDocFusion.bootstrapUniverse(pathToJstutJson),
        function() {
+    // (if nothing is specified) give them the overview for the package.
     if (!("doc" in env) && !("src" in env) && !("srcdoc" in env)) {
+      // crawl all the source files; in the future we might be able to just
+      //  grab the precomputed data for this from somewhere.
+      when(gDocFusion.originPackage.crawlAllSourceFiles(),
+           exports.showOverview,
+           explodeSadFace.bind(null, 'overview'));
     }
-    if ("doc" in env) {
+    else if ("doc" in env) {
       path = env.doc;
-      when(pkginfo.loadData(path),
+      when($pkginfo.loadData(path),
            exports.showDoc.bind(null, path),
            explodeSadFace.bind(null, path));
     }
     else if ("src" in env) {
       path = env.src;
-      when(pkginfo.loadSource(path),
+      when($pkginfo.loadSource(path),
            exports.showDoc.bind(null, path),
            explodeSadFace.bind(null, path));
     }
     else if ("srcdoc" in env) {
       path = env.srcdoc;
-      when(pkginfo.loadDoc(path),
+      when($pkginfo.loadDoc(path),
            exports.showDoc.bind(null, path),
            explodeSadFace.bind(null, path));
     }
@@ -106,6 +111,13 @@ function explodeSadFace(aDocPath, aStatusCode) {
       aDocPath + "(" + aStatusCode + ")";
   }
 }
+
+/**
+ *
+ */
+exports.showOverview = function showOverview() {
+
+};
 
 /**
  * Wrap a call to the document loader with some minor configuration setup

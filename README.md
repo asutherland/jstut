@@ -1,6 +1,6 @@
 jstut is a JavaScript documentation tool intended to make creating interactive,
 tutorial style documentation easily.  To this end, it can also do a lot of
-things other documentation tools can do (any many they cannot).
+things other documentation tools can do (and many they cannot).
 
 Reasonably fancy things supported:
 - Parses and abstractly interprets JS, understanding various OO idioms as well
