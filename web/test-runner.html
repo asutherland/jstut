@@ -22,6 +22,7 @@
         {
           baseUrl: "../../",
           paths: {
+            "text": "requirejs/text",
             "jstut": "jstut/lib/jstut",
             "jstut-plat": "jstut/lib-requirejs/jstut-plat",
             "jstut-tests": "jstut/tests",
@@ -32,8 +33,8 @@
             "wmsy-tests": "wmsy/tests",
           },
         },
-        ["requirejs/global-es5", "jstut/esther/testrunner-main"],
-        function(es5, mainModule) {
+        ["jstut/esther/testrunner-main"],
+        function(mainModule) {
           mainModule.main(document);
         }
       );
