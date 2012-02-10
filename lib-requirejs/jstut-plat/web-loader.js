@@ -71,32 +71,32 @@ exports.main = function web_loader_main(relPath, pathToJstutJson) {
   gDocFusion = new $docfusion.DocFusion();
   when(gDocFusion.bootstrapUniverse(pathToJstutJson),
        function() {
+    var pkg = gDocFusion.originPackage;
     // (if nothing is specified) give them the overview for the package.
-    if (!("doc" in env) && !("src" in env) && !("srcdoc" in env)) {
+    if (!("doc" in env) && !("src" in env)) {
       // crawl all the source files; in the future we might be able to just
       //  grab the precomputed data for this from somewhere.
-      when(gDocFusion.originPackage.crawlAllSourceFiles(),
+      when(pkg.crawlAllSourceFiles(),
            exports.showOverview,
            explodeSadFace.bind(null, 'overview'));
     }
     else if ("doc" in env) {
       path = env.doc;
-      when($pkginfo.loadData(path),
+      when($pkginfo.urlFetch(pkg.resolveDocPath(path)),
            exports.showDoc.bind(null, path),
            explodeSadFace.bind(null, path));
     }
     else if ("src" in env) {
       path = env.src;
-      when($pkginfo.loadSource(path),
+      when($pkginfo.urlFetch(pkg.resolveSourcePath(path)),
            exports.showDoc.bind(null, path),
            explodeSadFace.bind(null, path));
     }
-    else if ("srcdoc" in env) {
-      path = env.srcdoc;
-      when($pkginfo.loadDoc(path),
-           exports.showDoc.bind(null, path),
-           explodeSadFace.bind(null, path));
-    }
+    // XXX we used to have a 'srcdoc' mechanism which is not self-explanatory
+    //  and I think was related to our original jetpack-focused implementation
+    //  where things that weren't source files had to live under 'data'.  IT
+    //  is no longer the case that we are hardcore-jetpack, nor is it the case
+    //  that jetpack is so strict about paths.
   }, explodeSadFace.bind(null, pathToJstutJson));
 };
 
@@ -145,6 +145,7 @@ exports.showDoc = function showDoc(aDocPath, aContents) {
   var env = $env.getEnv();
   var options = {
     docFusion: gDocFusion,
+    pkg: gDocFusion.originPackage,
   };
   var docPath = env.doc;
   if ("src" in env) {

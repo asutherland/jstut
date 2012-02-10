@@ -97,7 +97,8 @@ exports.loadAnything = commonPackageLoad;
  * Load a data file from the given package.
  */
 function loadData(aDataRef) {
-  return commonPackageLoad(aDataRef, "data");
+  throw new Error("fatally deprecated loadData call: " + aDataRef);
+  //return commonPackageLoad(aDataRef, "data");
 }
 exports.loadData = loadData;
 
@@ -111,6 +112,7 @@ function dataDirUrl(aDataRef) {
   var packageName = refParts[0];
   var relPath = refParts.slice(1).join("/");
 
+  // bailing on the hardcoded data path structure now.
   var url = config.baseUrl + packageName + "/data/" + relPath;
   return url;
 }

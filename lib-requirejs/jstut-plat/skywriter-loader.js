@@ -42,7 +42,7 @@
  *  makeEditor causes it to be called.
  **/
 
-define("jstut-plat/skywriter-loader",
+define(
   [
     "jstut/utils/pwomise",
     "jstut-plat/package-info",
@@ -58,48 +58,10 @@ var when = $pwomise.when;
 
 var loadPromise;
 // dynamically loaded ace deps.
-var $env, $pluginManager, $editor, $renderer, $document, $undoManager, $theme,
-    $aceJsMode;
+var $editor, $renderer, $document, $undoManager, $theme,
+    $editSession, $aceJsMode, $interp;
 // dynamically loaded jstut stuff
 var $abstractHookup, $globalTokenizer, $jstutTokenizer;
-
-/**
- * This is a modified version of ace/editor's
- *  Editor.prototype.onDocumentModeChange implementation to cause it to use our
- *  $globalTokenizer.GlobalTokenizer instead of BackgroundTokenizer.
- */
-var editorThunkOnDocumentModeChange = function() {
-  var mode = this.doc.getMode();
-  if (this.mode == mode)
-    return;
-
-  this.mode = mode;
-  var tokenizer = mode.getTokenizer();
-
-  if (!this.bgTokenizer) {
-    var onUpdate = this.onTokenizerUpdate.bind(this);
-    this.bgTokenizer =
-      new $globalTokenizer.GlobalFallbackTokenizer(tokenizer, this);
-    this.bgTokenizer.addEventListener("update", onUpdate);
-  } else {
-    this.bgTokenizer.setTokenizer(tokenizer);
-  }
-
-  this.renderer.setTokenizer(this.bgTokenizer);
-};
-
-/**
- * This is a modified version of ace/editor's onDocumentChange method that
- *  also tells the bgTokenizer the last row that changed.
- */
-function editorThunkDocumentChange(e) {
-  var data = e.data;
-  this.bgTokenizer.start(data.firstRow, data.lastRow);
-  this.renderer.updateLines(data.firstRow, data.lastRow);
-
-  // update cursor because tab characters can influence the cursor position
-  this.renderer.updateCursor(this.getCursorPosition(), this.$overwrite);
-};
 
 
 /**
@@ -113,25 +75,24 @@ exports.loadSkywriter = function loadSkywriter() {
   loadPromise = deferred.promise;
 
   require(
-    ["pilot/plugin_manager", "pilot/settings", "pilot/environment",
-     "ace/editor", "ace/virtual_renderer", "ace/document",
+    ["ace/editor", "ace/virtual_renderer", "ace/document", "ace/edit_session",
      "ace/undomanager",
      "ace/mode/javascript", "ace/theme/textmate",
      "jstut/skywriter/abstract_hookup",
      "jstut/skywriter/global_tokenizer",
-     "jstut/skywriter/jstut_tokenizer"],
-    function(m_pluginManager, $settings, m_env,
-             m_editor, m_renderer, m_document,
+     "jstut/skywriter/jstut_tokenizer",
+     "jstut/ctags/interp"],
+    function(m_editor, m_renderer, m_document, m_edit_session,
              m_undoManager,
              m_ace_js_mode, m_theme,
              m_abstractHookup,
              m_globalTokenizer,
-             m_jstutTokenizer) {
-      $pluginManager = m_pluginManager;
-      $env = m_env;
+             m_jstutTokenizer,
+             m_interp) {
       $editor = m_editor;
       $renderer = m_renderer;
       $document = m_document;
+      $editSession = m_edit_session;
       $undoManager = m_undoManager,
       $aceJsMode = m_ace_js_mode;
       // we're using textmate until we can convert proton over.
@@ -140,57 +101,64 @@ exports.loadSkywriter = function loadSkywriter() {
       $abstractHookup = m_abstractHookup;
       $globalTokenizer = m_globalTokenizer;
       $jstutTokenizer = m_jstutTokenizer;
+      $interp = m_interp;
 
-      // thunk editor so our tokenizer can get the info it needs.
-      $editor.Editor.prototype.onDocumentModeChange =
-        editorThunkOnDocumentModeChange;
-      $editor.Editor.prototype.onDocumentChange = editorThunkDocumentChange;
-
-      $pluginManager.catalog.registerPlugins(["pilot/index", "cockpit/index"])
-        .then(function() {
-          deferred.resolve();
-        });
+      deferred.resolve();
     });
 
   return loadPromise;
 };
 
 
-exports.makeEditor = function makeEditor(binding, domNode, code) {
+exports.makeEditor = function makeEditor(binding, domNode, code,
+                                         docFusion) {
+
   return when(exports.loadSkywriter(),
     function() {
-      var env = $env.create();
-      $pluginManager.catalog.startupPlugins({env: env}).then(function() {
-        env.editor = new $editor.Editor(
-                       new $renderer.VirtualRenderer(domNode, $theme));
-        env.editor.wmsyBinding = binding;
-        var doc = new $document.Document(code);
-        var aceJsMode = new $aceJsMode.Mode();
+      var editor = new $editor.Editor(
+                     new $renderer.VirtualRenderer(domNode, $theme));
+      editor.wmsyBinding = binding;
 
-        var jstutTokenizer = new $jstutTokenizer.JstutTokenizer(
-                               aceJsMode.getTokenizer(), env);
-        // Tell the binding about the tokenizer so that it can tell the
-        //  tokenizer about updated preAsts.
-        binding.jstutTokenizer = jstutTokenizer;
-        // Also snapshot the current state of the preAsts.
-        jstutTokenizer.preAsts = binding.obj.preAsts;
-        // The binding also needs to know about the editor to shunt focus back
-        //  to it.
-        binding.editor = env.editor;
+      // - create mode, perform general hookup
+      var aceJsMode = new $aceJsMode.Mode();
+      var editSession = new $editSession.EditSession(code, aceJsMode);
 
-        // Leave $tokenizer intact for getNextLineIndent, but make the mode
-        //  report the jstutTokenizer as its tokenizer.
-        aceJsMode.getTokenizer = function() {
-          return jstutTokenizer;
-        };
-        doc.setMode(aceJsMode);
-        doc.setUndoManager(new $undoManager.UndoManager());
-        env.editor.setDocument(doc);
-        env.editor.focus();
-        env.editor.resize();
+      var interpbox = new $interp.InterpSandbox(docFusion);
+      var jstutTokenizer = new $jstutTokenizer.JstutTokenizer(
+                             aceJsMode.getTokenizer(), interpbox);
+      // Tell the binding about the tokenizer so that it can tell the
+      //  tokenizer about updated preAsts.
+      binding.jstutTokenizer = jstutTokenizer;
+      // Also snapshot the current state of the preAsts.
+      jstutTokenizer.preAsts = binding.obj.preAsts;
+      // The binding also needs to know about the editor to shunt focus back
+      //  to it.
+      binding.editor = editor;
+      // Leave $tokenizer intact for getNextLineIndent, but make the mode
+      //  report the jstutTokenizer as its tokenizer.
+      aceJsMode.getTokenizer = function() {
+        return jstutTokenizer;
+      };
 
-        $abstractHookup.injectIntoEditor(env.editor);
-      });
+      // - kill bgTokenizer, replace it with our global fallback one
+      editSession.bgTokenizer.stop();
+      editSession.bgTokenizer = new $globalTokenizer.GlobalFallbackTokenizer(
+                                  jstutTokenizer, editor);
+      editSession.bgTokenizer.addEventListener(
+        "update", function(e) {
+          editSession._emit("tokenizerUpdate", e);
+        });
+
+      editSession.bgTokenizer.setDocument(editSession.getDocument());
+      editSession.bgTokenizer.start(0);
+
+      //doc.setMode(aceJsMode);
+      editSession.setUndoManager(new $undoManager.UndoManager());
+      editor.setSession(editSession);
+      editor.focus();
+      editor.resize();
+
+      $abstractHookup.injectIntoEditor(editor);
     },
     null, "makeEditor");
 };

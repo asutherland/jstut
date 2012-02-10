@@ -1,0 +1,157 @@
+.rounded (@color: #888888) {
+  border-radius: 4px;
+  border: 1px solid @color;
+  padding: 2px;
+  padding-right: 6px;
+}
+.headerLabel {
+  font-family: sans-serif;
+}
+@collapser-border: #4e9a06;
+@collapser-bg: #73d216;
+@traceout-border: #c4a000;
+@traceout-bg: #edd400;
+@darea-border: #8f5902;
+@darea-bg: #e9b96e;
+
+#collapser {
+  #root {
+      display: inline-block;
+      .rounded(@collapser-border);
+      background-color: @collapser-bg;
+      margin-right: 0.2em;      
+
+  }
+  #root[expanded=true] {
+      display: block;
+      margin: 2px 0px;      
+
+      #header {
+          #toggler {
+            vertical-align: -20%;
+            background: url(jstut/data/images/minus_sign.png) no-repeat 0% 50%;
+          }
+      }
+  }
+  #root[expanded=false] {
+      #header {
+          #toggler {
+            vertical-align: -20%;
+            background: url(jstut/data/images/plus_sign.png) no-repeat 0% 50%;
+          }
+      }
+  }
+  #header {
+    cursor: pointer;
+  }
+  #label {
+    .headerLabel
+  }
+  #toggler {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    margin-right: 4px;
+  }
+}
+
+#traceout {
+  #root {
+    display: block;
+    .rounded(@traceout-border);
+    background-color: @traceout-bg;
+  }
+  #label {
+    .headerLabel
+  }
+  #out {
+    border-radius: 4px;
+    background-color: #fff;
+    padding: 4px;
+  }
+}
+
+#autocomplete-container {
+  #completions {
+    display: table;
+    background-color: white;
+    padding: 4px;
+  }
+  #completions-item {
+    cursor: pointer;
+  }
+}
+
+#autocomplete-item {
+  #root {
+      display: table-row;
+      border: 1px solid transparent;      
+
+  }
+  #name {
+    display: table-cell;
+    padding-right: 4px;
+  }
+  #briefDesc {
+    display: table-cell;
+    color: gray;
+  }
+}
+
+#editable-code {
+  #root {
+      display: block;
+      position: relative;
+      border: 1px solid black;
+      border-radius: 2px;
+      margin: 2px 0px;      
+
+  }
+  #root[mode=display] {
+      #editor {
+        display: none;
+      }
+      #runButton {
+        display: none;
+      }
+  }
+  #root[mode=edit] {
+      #codeDisplay {
+        display: none;
+      }
+      #editButton {
+        display: none;
+      }
+  }
+  #editor {
+    width: 100%;
+    height: 100%;
+    background-color: white;
+  }
+  #editButton {
+    position: absolute;
+    top: 0;
+    right: 0;
+  }
+  #runButton {
+    position: absolute;
+    top: 0;
+    right: 0;
+  }
+}
+
+#example-show {
+  #root {
+    display: block;
+    .rounded(@darea-border);
+    background-color: @darea-bg;
+  }
+  #label {
+    .headerLabel
+  }
+  #outArea {
+    .rounded(@darea-border);
+    background-color: white;
+    padding: 4px;
+  }
+}

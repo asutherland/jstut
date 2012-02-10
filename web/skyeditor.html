@@ -18,34 +18,28 @@
         console.log(aMsgWithNewline.replace("\n", "", "g"));
       }
     </script>
+  <script type="text/javascript" src="../../requirejs/require.js"></script>
 <!--
-    <script type="text/javascript" src="../../requirejs/require.js"></script>
+  <script type="text/javascript" src="../../ace/demo/require.js"></script>
 -->
-<script type="text/javascript" src="../../ace/demo/require.js"></script>
   <script>
     require(
       {
         baseUrl: "../../",
         // jstut stuff
         paths: {
+          "text": "requirejs/text",
           "jstut": "jstut/lib/jstut",
-          //"require": "requirejs/require",
-          "requirejs": "requirejs/build/convert/commonjs",
           "jstut-plat": "jstut/lib-requirejs/jstut-plat",
-          "wmsy": "wmsy/lib/wmsy/",
+          "wmsy": "wmsy/lib/wmsy",
+
+          "ace": "ace/lib/ace",
+          "cockpit": "ace/support/cockpit/lib/cockpit",
+          "pilot": "ace/support/pilot/lib/pilot",
         },
-        packages: [
-          // skywriter (or rather ace) stuff, which we are leaving under ace
-          { name: "ace", location: "ace", lib: "lib/ace"},
-          { name: "cockpit", location: "ace/support/cockpit",
-            lib: "lib/cockpit",
-            main: "index" },
-          { name: "pilot", location: "ace/support/cockpit/support/pilot",
-            lib: "lib/pilot", main: "index" },
-        ],
       },
-      ["requirejs/global-es5", "jstut-plat/skywriter-loader",
-       "wmsy/wmsy", "jstut/present/interactive",
+      ["jstut-plat/skywriter-loader", "jstut/utils/pwomise",
+       "wmsy/wmsy", "jstut/docfusion", "jstut/present/interactive",
        "jstut/readers/js",
        "jstut/present/type-basics", "jstut/present/code-blocks",
        "jstut/present/app-doc"],
@@ -56,7 +50,8 @@
       // we should likely just consider completely using the jstut
       //  document loader mechanism with a very specific test document that
       //  forces the thing into an editor mode...
-      function(es5, $skyLoader, $wmsy, $ui_interactive, $reader_js,
+      function($skyLoader, $pwomise, $wmsy, $docfusion,
+               $ui_interactive, $reader_js,
                $ui_type_basics, $ui_code_blocks, $ui_app_doc) {
         var emitter = $ui_app_doc.wy.wrapElement(
                         document.getElementById("body"));
@@ -65,29 +60,38 @@
         var fakeContext = {
           filename: "fromdom",
           rawMode: false,
+          docFusion: new $docfusion.DocFusion(),
         };
+        //debugging support:
+        window.DOCFUSION = fakeContext.docFusion;
 
-        var block = $reader_js.reader_js(jssrc,fakeContext)[0];
-        console.log("jssrc", {src: jssrc}, "block", block);
-        var fakeEditableCode = {
-          kind: "editable-code",
-          code: block,
-          preAsts: [],
-        };
+        var WMSY_JSTUT_PATH = "../../wmsy/data/jstut.json";
+        $pwomise.when(
+          fakeContext.docFusion.bootstrapUniverse(WMSY_JSTUT_PATH),
+          function() {
+            var block = $reader_js.reader_js(jssrc,fakeContext)[0];
+            //console.log("jssrc", {src: jssrc}, "block", block);
+            var fakeEditableCode = {
+              kind: "editable-code",
+              code: block,
+              preAsts: [],
+            };
 
-        var rootObj = {
-          appData: {
-            app: "doc",
-            textStream: [fakeEditableCode],
-          },
-        };
-        var binding = emitter.bind({type: "app-root", obj: rootObj});
-        var button = document.documentElement.querySelector(
-                      'input[type="button"][value="Edit..."]');
-        // this bit is more brittle than the rest of the sketchy stuff we
-        //  are doing here...
-        var editableCodeBinding = button.parentNode.binding;
-        editableCodeBinding.goEdit();
+            var rootObj = {
+              appData: {
+                app: "doc",
+                textStream: [fakeEditableCode],
+              },
+              docFusion: fakeContext.docFusion,
+            };
+            var binding = emitter.bind({type: "app-root", obj: rootObj});
+            var button = document.documentElement.querySelector(
+                          'input[type="button"][value="Edit..."]');
+            // this bit is more brittle than the rest of the sketchy stuff we
+            //  are doing here...
+            var editableCodeBinding = button.parentNode.binding;
+            editableCodeBinding.goEdit();
+          });
       }
     );
   </script>

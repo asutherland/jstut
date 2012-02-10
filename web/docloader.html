@@ -2,7 +2,7 @@
 <html>
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Narscribblus doc loader</title>
+    <title>Jstut doc loader</title>
     <script type="text/javascript">
       var console;
       if (!console)
@@ -16,33 +16,29 @@
         console.log(aMsgWithNewline.replace("\n", "", "g"));
       }
     </script>
-<!--
     <script type="text/javascript" src="../../requirejs/require.js"></script>
--->
+<!--
 <script type="text/javascript" src="../../ace/demo/require.js"></script>
+-->
   <script>
     require(
       {
         baseUrl: "../../",
         // jstut stuff
         paths: {
+          "text": "requirejs/text",
           "jstut": "jstut/lib/jstut",
-          "requirejs": "requirejs/build/convert/commonjs",
           "jstut-plat": "jstut/lib-requirejs/jstut-plat",
           "wmsy": "wmsy/lib/wmsy/",
+
+          "ace": "ace/lib/ace",
+          // XXX these had main directives.
+          "cockpit": "ace/support/cockpit/lib/cockpit",
+          "pilot": "ace/support/cockpit/support/pilot/lib/pilot",
         },
-        packages: [
-          // skywriter (or rather ace) stuff, which we are leaving under ace
-          { name: "ace", location: "ace", lib: "lib/ace"},
-          { name: "cockpit", location: "ace/support/cockpit",
-            lib: "lib/cockpit",
-            main: "index" },
-          { name: "pilot", location: "ace/support/cockpit/support/pilot",
-            lib: "lib/pilot", main: "index" },
-        ],
       },
-      ["requirejs/global-es5", "jstut-plat/web-loader"],
-      function(es5, mainModule) {
+      ["jstut-plat/web-loader"],
+      function(mainModule) {
         mainModule.main("../../");
       }
     );
