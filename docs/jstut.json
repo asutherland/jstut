@@ -1,0 +1,14 @@
+{
+  "us": {
+    "name": "jstut",
+    "root": "../",
+    "mappings": {
+      "jstut": "lib/jstut",
+      "jstut-plat": "lib-requirejs/jstut-plat"
+    }
+  },
+  "deps": {
+    "wmsy": false,
+    "wmsy-plat": false
+  }
+}

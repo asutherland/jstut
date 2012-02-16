@@ -32,14 +32,14 @@
           "wmsy": "wmsy/lib/wmsy/",
 
           "ace": "ace/lib/ace",
-          // XXX these had main directives.
           "cockpit": "ace/support/cockpit/lib/cockpit",
           "pilot": "ace/support/cockpit/support/pilot/lib/pilot",
         },
       },
       ["jstut-plat/web-loader"],
       function(mainModule) {
-        mainModule.main("../../");
+        mainModule.main("../../",
+                        "../docs/jstut.json");
       }
     );
   </script>
