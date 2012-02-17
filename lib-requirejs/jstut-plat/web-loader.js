@@ -82,14 +82,14 @@ exports.main = function web_loader_main(relPath, pathToJstutJson) {
     }
     else if ("doc" in env) {
       path = env.doc;
-      when($pkginfo.urlFetch(pkg.resolveDocPath(path)),
-           exports.showDoc.bind(null, path),
+      when(pkg.requireDoc(path),
+           exports.showDoc,
            explodeSadFace.bind(null, path));
     }
     else if ("src" in env) {
       path = env.src;
-      when($pkginfo.urlFetch(pkg.resolveSourcePath(path)),
-           exports.showDoc.bind(null, path),
+      when(pkg.requireModule(path),
+           exports.showDoc,
            explodeSadFace.bind(null, path));
     }
     // XXX we used to have a 'srcdoc' mechanism which is not self-explanatory
@@ -112,6 +112,23 @@ function explodeSadFace(aDocPath, aStatusCode) {
   }
 }
 
+// XXX this needs to get hooked up to the parse failure pipeline; this used
+//  to be directly slaved to the file parser so we'd get its rejections,
+//  but got moot-bandoned by the change to using requireDoc
+function explodeParseFailure(ex) {
+  // force app-doc in failure cases since it has provision for failure
+  //  display
+  require(["jstut/present/app-doc"], function(app) {
+    app.showDoc({
+                  app: "parse-failure",
+                  kind: "webbish",
+                  path: aDocPath,
+                  ex: ex
+                },
+                document, gPackageBaseRelPath);
+  });
+}
+
 /**
  *
  */
@@ -120,80 +137,40 @@ exports.showOverview = function showOverview() {
 };
 
 /**
- * Wrap a call to the document loader with some minor configuration setup
- *  (before) and dynamic loading of the appropriate application (after).
- *
- *
- * Compare and constrast with main.js' showWhereYouCan and skbwl-protocol.js'
- *  makeDocURI.
- *
- * If we successfully retrieve the document then we create an iframe for it to
- *  live in.
- *
- * @args[
- *   @param[aDocPath String]{
- *     The friendly description of the path.  It's hiding the fact that you also
- *     need to know whether doc (loadData), src (loadSource), or srcdoc
- *     (loadDoc) was used, since those also perform transforms on the path.
- *   }
- *   @param[aContents String]{
- *     The text that makes up the document.
- *   }
- * ]
+ * requireDoc/requireModule has completed successfully, and we're getting the
+ *  ModuleInfo or DocInfo structure back.
  */
-exports.showDoc = function showDoc(aDocPath, aContents) {
-  var env = $env.getEnv();
-  var options = {
-    docFusion: gDocFusion,
-    pkg: gDocFusion.originPackage,
-  };
-  var docPath = env.doc;
-  if ("src" in env) {
-    options.lang = "jstut/js";
-    docPath = env.src;
+exports.showDoc = function showDoc(aMetaInfo) {
+  var parsed = aMetaInfo.langOutput;
+  if (!("app" in parsed) || parsed.app == "html") {
+    showOldSchoolIFrame(parsed);
+    return;
   }
-  if ("forcelang" in env)
-    options.forceLang = env.forcelang;
-  if ("mode" in env)
-    options.mode = env.mode;
 
-  var loadPromise =
-  when(loader.parseDocument(aContents, aDocPath, options),
-       function showDocParsed(parsed) {
-         if (!("app" in parsed) || parsed.app == "html") {
-           showOldSchoolIFrame(parsed);
-           return;
-         }
+  var appModule;
+  // XXX this parameterization is basically mooted at the current time as
+  //  we have basically dismantled the mode system as it used to exist.  I
+  //  think the proper direction is probably to have 'process' totally end
+  //  up doing nothing until we get to this stage.  And then we can have this
+  //  stage tell process to pick a mode and produce something for its
+  //  presentation layer.
+  // At that point, the only way a language can alter its behaviour is by
+  //  turning on raw mode, and that should just cause it to generate token runs
+  //  that potentially get annotated.
+  switch (parsed.app) {
+    case "browse":
+      appModule = "jstut/present/app-browse";
+      break;
+    case "doc":
+      appModule = "jstut/present/app-doc";
+      break;
+    default:
+      throw new Error("unrecognized app code: " + parsed.app);
+  }
 
-         var appModule;
-         switch (parsed.app) {
-           case "browse":
-             appModule = "jstut/present/app-browse";
-             break;
-           case "doc":
-             appModule = "jstut/present/app-doc";
-             break;
-           default:
-             throw new Error("unrecognized app code: " + parsed.app);
-         }
-
-         require([appModule], function(app) {
-           app.showDoc(parsed, document, gPackageBaseRelPath);
-         });
-       },
-       function showDocParseFailure(ex) {
-         // force app-doc in failure cases since it has provision for failure
-         //  display
-         require(["jstut/present/app-doc"], function(app) {
-           app.showDoc({
-                         app: "parse-failure",
-                         kind: "webbish",
-                         path: aDocPath,
-                         ex: ex
-                       },
-                       document, gPackageBaseRelPath);
-         });
-       }, "root-load", aDocPath);
+  require([appModule], function(app) {
+    app.showDoc(parsed, document, gPackageBaseRelPath);
+  });
 
   document.jstutVisualizeDocLoad = function visDocLoad(showBoring) {
     require(["jstut/utils/pwomise-vis"], function ($pvis) {
