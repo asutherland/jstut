@@ -52,7 +52,7 @@
   }
 
   #sender, #message, #recipient {
-    width: 10em;
+    width: 12em;
     display: inline-block;
     text-align: center;
     vertical-align: middle;
