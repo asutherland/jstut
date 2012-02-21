@@ -40,6 +40,17 @@
 }
 
 #proto-action-send {
+  #toggler {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    margin-right: 4px;
+    background: url(jstut/data/images/plus_sign.png) no-repeat 0% 50%;
+  }
+  #toggler[expanded=true] {
+    background: url(jstut/data/images/minus_sign.png) no-repeat 0% 50%;
+  }
+
   #sender, #message, #recipient {
     width: 10em;
     display: inline-block;
