@@ -1,0 +1,49 @@
+
+#participants {
+  #participants {
+    margin-left: 30px;
+  }
+
+  #participants-item {
+    border-bottom: 1px solid gray;
+  }
+}
+
+#actor-def {
+  #root {
+    margin-top: 0.5em;
+  }
+
+  #header {
+  }
+  #icon {
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 4px;
+  }
+  #label {
+    font-weight: bold;
+  }
+
+  #description {
+    display: block;
+    margin-left: 36px;
+    margin-top: -1em;
+    margin-bottom: -0.5em;
+  }
+}
+
+#actor-usage {
+  #icon {
+    text-align: center;
+  }
+}
+
+#proto-action-send {
+  #sender, #message, #recipient {
+    width: 10em;
+    display: inline-block;
+    text-align: center;
+    vertical-align: middle;
+  }
+}
